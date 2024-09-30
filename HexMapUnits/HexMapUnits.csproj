@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Title>Hexagon Units Data and Logic Library</Title>
+    <Version>0.0.1</Version>
+    <Authors>Werner Ziegelwanger</Authors>
+    <Company>Hexagon Simulations</Company>
+    <Description>A library for data and logic for units of tiled based games.</Description>
+    <Copyright>Hexagon Simulations</Copyright>
+    <PackageProjectUrl>https://hexagon-simulations.com/</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Ziagl/hex-map-units</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>hexagon geometry map unit tile 2d library</PackageTags>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<None Include="..\LICENSE" Pack="true" PackagePath="\" />
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+	<PackageReference Include="HexMapBase" Version="0.1.8" />
+  </ItemGroup>
+
+</Project>
