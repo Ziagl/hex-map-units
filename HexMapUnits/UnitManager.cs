@@ -1,4 +1,5 @@
 ﻿using com.hexagonsimulations.Geometry.Hex;
+using com.hexagonsimulations.Geometry.Hex.Models;
 using HexMapUnits.Enums;
 using HexMapUnits.Models;
 
@@ -124,7 +125,7 @@ public class UnitManager
     /// <param name="unitId">id of unit</param>
     /// <param name="path">path to destination</param>
     /// <returns>true if unit was moved, false if unit was not found, path is empty, path is too long or start is not given unit</returns>
-    public bool MoveUnitByPath(int unitId, List<MovementTile> path)
+    public bool MoveUnitByPath(int unitId, List<WeightedCubeCoordinates> path)
     {
         UnitBase? unit = null;
         if(!_unitStore.TryGetValue(unitId, out unit))

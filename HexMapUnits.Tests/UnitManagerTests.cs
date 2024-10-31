@@ -1,4 +1,5 @@
 using com.hexagonsimulations.Geometry.Hex;
+using com.hexagonsimulations.Geometry.Hex.Models;
 using HexMapUnits.Models;
 
 namespace HexMapUnits.Tests;
@@ -167,13 +168,13 @@ public class UnitManagerTests
         var unit = CloneUnit(_exampleUnit);
         bool success = unitManager.CreateUnit(unit);
         Assert.True(success);
-        success = unitManager.MoveUnitByPath(unit.Id, new List<MovementTile>() {
-            new MovementTile(){ Coordinates = new CubeCoordinates(0, 0, 0),
-                                Cost = 5 },
-            new MovementTile(){ Coordinates = new CubeCoordinates(1, 0, -1),
-                                Cost = 5 },
-            new MovementTile(){ Coordinates = new CubeCoordinates(2, 0, -2),
-                                Cost = 5 },
+        success = unitManager.MoveUnitByPath(unit.Id, new List<WeightedCubeCoordinates>() {
+            new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(0, 0, 0),
+                                           Cost = 5 },
+            new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(1, 0, -1),
+                                           Cost = 5 },
+            new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(2, 0, -2),
+                                           Cost = 5 },
         });
         Assert.True(success);
         var units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(2, 0, -2));
