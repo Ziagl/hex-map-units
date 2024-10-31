@@ -8,7 +8,8 @@ public record UnitBase
     // base
     public int Id; // id = index in unit store
     public int Player; // id of player this unit belongs to
-    public UnitType Type; // the type of this unit (value of an enum?)
+    public int Type; // the type of this unit (value of an enum?)
+    public int Era; // min era for this unit
     public int Health; // current health points
     public int MaxHealth; // maximum health points
     public int Movement; // current movement points

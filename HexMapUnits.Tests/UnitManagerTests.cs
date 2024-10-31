@@ -13,7 +13,7 @@ public class UnitManagerTests
         Position = new CubeCoordinates(0, 0, 0),
         Layer = 0,
         Player = 1,
-        Type = Enums.UnitType.SETTLER,
+        Type = 1,
         Health = 100,
         MaxHealth = 100,
         Movement = 10,
