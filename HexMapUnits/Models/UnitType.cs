@@ -17,6 +17,7 @@ public record UnitType
     // flags
     public bool CanAttack; // can this unit attack?
     // economy
+    public Dictionary<int, int> Goods = new(); // Goods needed to product this unit
     public int ProductionCost; // amount of production needed to build this unit
     public int PurchaseCost; // amount of gold needed to purchase this unit
 }

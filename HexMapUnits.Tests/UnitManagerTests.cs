@@ -19,9 +19,11 @@ public class UnitManagerTests
         Movement = 10,
         MaxMovement = 10,
         Attack = 10,
+        RangedAttack = 5,
         Defense = 10,
         Range = 1,
         CanAttack = false,
+        Goods = new() { { 1, 2 } },
         ProductionCost = 0,
         PurchaseCost = 0,
     };
