@@ -11,6 +11,7 @@ public record UnitType
     public int MaxMovement; // maximum movement points (affects movement range)
     // stats
     public int Attack; // attack points (damage in fight)
+    public int RangedAttack; // ranged attack points (damage of airstrike)
     public int Defense; // defence points (how much damage is reduced)
     public int Range; // attack range (how far can this unit attack)
     // flags
