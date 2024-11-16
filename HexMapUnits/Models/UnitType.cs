@@ -16,8 +16,9 @@ public record UnitType
     public int Range; // attack range (how far can this unit attack)
     // flags
     public bool CanAttack; // can this unit attack?
+    public bool CanBuildCity; // can this unit build a new city?
     // economy
-    public Dictionary<int, int> Goods = new(); // Goods needed to product this unit
+    public Dictionary<int, int> Goods = new(); // goods needed to produce this unit
     public int ProductionCost; // amount of production needed to build this unit
     public int PurchaseCost; // amount of gold needed to purchase this unit
 }

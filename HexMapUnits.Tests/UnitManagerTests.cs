@@ -23,6 +23,7 @@ public class UnitManagerTests
         Defense = 10,
         Range = 1,
         CanAttack = false,
+        CanBuildCity = false,
         Goods = new() { { 1, 2 } },
         ProductionCost = 0,
         PurchaseCost = 0,
