@@ -187,6 +187,44 @@ public class UnitManagerTests
         Assert.Empty(units);
     }
 
+    [Fact]
+    public void TestIsTileOccupied()
+    {
+        var map = new List<List<int>>() { 
+            Enumerable.Repeat(0, 16).ToList(),  // layer 0
+            Enumerable.Repeat(0, 16).ToList()   // layer 1
+        };
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unit1 = CloneUnit(_exampleUnit);
+        unit1.Player = 1;
+        unit1.Layer = 0;
+        unit1.Position = new CubeCoordinates(0, 0, 0);
+        bool success = unitManager.CreateUnit(unit1);
+        Assert.True(success);
+        var unit2 = CloneUnit(_exampleUnit);
+        unit2.Player = 2;
+        unit2.Layer = 0;
+        unit2.Position = new CubeCoordinates(1, 0, -1);
+        success = unitManager.CreateUnit(unit2);
+        Assert.True(success);
+        var unit3 = CloneUnit(_exampleUnit);
+        unit3.Player = 1;
+        unit3.Layer = 1;
+        unit3.Position = new CubeCoordinates(2, 0, -2);
+        success = unitManager.CreateUnit(unit3);
+        Assert.True(success);
+        var selectedUnit = CloneUnit(_exampleUnit);
+        selectedUnit.Player = 1;
+        selectedUnit.Layer = 0;
+        selectedUnit.Position = new CubeCoordinates(1, 1, -2);
+        success = unitManager.CreateUnit(selectedUnit);
+        Assert.True(success);
+        Assert.True(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));    // occupied by unit1
+        Assert.False(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));  // unit2 with different player
+        Assert.False(unitManager.IsTileOccupied(new CubeCoordinates(2, 0, -2), selectedUnit));  // unit3 with different layer
+        Assert.False(unitManager.IsTileOccupied(new CubeCoordinates(0, 1, -1), selectedUnit));  // empty tile
+    }
+
     private UnitBase CloneUnit(UnitBase unit)
     {
         return new UnitBase

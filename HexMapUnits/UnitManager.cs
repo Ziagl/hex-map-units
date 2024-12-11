@@ -224,4 +224,30 @@ public class UnitManager
         }
         return foundUnits;
     }
+
+    /// <summary>
+    /// Checks if given coordinates is occupied by unit on same layer and of same player
+    /// </summary>
+    /// <param name="coordinates">tile coordinates to check</param>
+    /// <param name="unit">unit with additional data</param>
+    /// <returns>true if a unit o given player is on this tile otherwiese false</returns>
+    public bool IsTileOccupied(CubeCoordinates coordinates, UnitBase unit)
+    {
+        var offsetCoordinates = coordinates.ToOffset();
+        int unitId = _map.Map[unit.Layer][offsetCoordinates.y * _map.Columns + offsetCoordinates.x];
+        // early exit if map position is empty
+        if(unitId == (int)TileType.EMPTY)
+        {
+            return false;
+        }
+        // get unit and check for detail
+        var otherUnit = GetUnitById(unitId);
+        if(otherUnit != null &&
+           otherUnit.Layer == unit.Layer &&
+           otherUnit.Player == unit.Player)
+        {
+            return true;
+        }
+        return false;
+    }
 }
