@@ -154,7 +154,7 @@ public class UnitManager
         {
             movementCosts += path[i].Cost;
         }
-        if(movementCosts > unit.Movement)
+        if(movementCosts > unit.Movement + 1)
         {
             return false;
         }
