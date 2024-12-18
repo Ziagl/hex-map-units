@@ -1,10 +1,11 @@
-using com.hexagonsimulations.Geometry.Hex;
+﻿using com.hexagonsimulations.Geometry.Hex;
 using com.hexagonsimulations.Geometry.Hex.Models;
 using HexMapUnits.Models;
 
 namespace HexMapUnits.Tests;
 
-public class UnitManagerTests
+[TestClass]
+public sealed class UnitManagerTests
 {
     private readonly List<UnitBase> _unitDefinitions = new();
     private readonly UnitBase _exampleUnit = new()
@@ -34,18 +35,18 @@ public class UnitManagerTests
         _unitDefinitions.Add(new UnitBase() { });
     }
 
-    [Fact]
+    [TestMethod]
     public void TestCreateUnit()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
         var unit = CloneUnit(_exampleUnit);
         bool success = unitManager.CreateUnit(unit);
-        Assert.True(success);
-        Assert.NotEqual(0, unit.Id);
+        Assert.IsTrue(success);
+        Assert.AreNotEqual(0, unit.Id);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestCreateUnitInvalidLayer()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
@@ -53,10 +54,10 @@ public class UnitManagerTests
         var unit = CloneUnit(_exampleUnit);
         unit.Layer = 1;
         bool success = unitManager.CreateUnit(unit);
-        Assert.False(success);
+        Assert.IsFalse(success);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestCreateUnitPositionOccupied()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
@@ -64,23 +65,23 @@ public class UnitManagerTests
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>() { new List<int>() { 1 } }, _unitDefinitions);
         var unit = CloneUnit(_exampleUnit);
         bool success = unitManager.CreateUnit(unit);
-        Assert.False(success);
+        Assert.IsFalse(success);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestCreateUnitAddTwoUnitsOnSameCoordinate()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
         var unit = CloneUnit(_exampleUnit);
         bool success = unitManager.CreateUnit(unit);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var unit2 = CloneUnit(_exampleUnit);
         success = unitManager.CreateUnit(unit2);
-        Assert.False(success);
+        Assert.IsFalse(success);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestGetUnitsOfPlayer()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
@@ -88,89 +89,89 @@ public class UnitManagerTests
         var unit = CloneUnit(_exampleUnit);
         unit.Player = 1;
         bool success = unitManager.CreateUnit(unit);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var unit2 = CloneUnit(_exampleUnit);
         unit2.Player = 2;
         unit2.Position = new CubeCoordinates(1, 0, -1);
         success = unitManager.CreateUnit(unit2);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var unit3 = CloneUnit(_exampleUnit);
         unit3.Player = 1;
         unit3.Position = new CubeCoordinates(2, 0, -2);
         success = unitManager.CreateUnit(unit3);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var units = unitManager.GetUnitsOfPlayer(2);
-        Assert.Single(units);
-        Assert.Equal(2, units.First().Id);
+        Assert.AreEqual(1, units.Count);
+        Assert.AreEqual(2, units.First().Id);
         units = unitManager.GetUnitsOfPlayer(1);
-        Assert.Equal(2, units.Count);
+        Assert.AreEqual(2, units.Count);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestRemoveUnit()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
         var unit = CloneUnit(_exampleUnit);
         bool success = unitManager.CreateUnit(unit);
-        Assert.True(success);
+        Assert.IsTrue(success);
         success = unitManager.RemoveUnit(unit.Id);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var units = unitManager.GetUnitsOfPlayer(1);
-        Assert.Empty(units);
+        Assert.AreEqual(0, units.Count);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestGetUnitById()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
         var unit = CloneUnit(_exampleUnit);
         bool success = unitManager.CreateUnit(unit);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var unit2 = unitManager.GetUnitById(unit.Id);
-        Assert.NotNull(unit2);
-        Assert.Equal(unit.Id, unit2.Id);
+        Assert.IsNotNull(unit2);
+        Assert.AreEqual(unit.Id, unit2.Id);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestGetUnitsByCoordinates()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
         var unit = CloneUnit(_exampleUnit);
         bool success = unitManager.CreateUnit(unit);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(0, 0, 0));
-        Assert.Single(units);
-        Assert.Equal(1, units.First().Id);
+        Assert.AreEqual(1, units.Count);
+        Assert.AreEqual(1, units.First().Id);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestMoveUnit()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
         var unit = CloneUnit(_exampleUnit);
         bool success = unitManager.CreateUnit(unit);
-        Assert.True(success);
+        Assert.IsTrue(success);
         success = unitManager.MoveUnit(unit.Id, new CubeCoordinates(1, 0, -1));
-        Assert.True(success);
+        Assert.IsTrue(success);
         var units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(1, 0, -1));
-        Assert.Single(units);
-        Assert.Equal(1, units.First().Id);
+        Assert.AreEqual(1, units.Count);
+        Assert.AreEqual(1, units.First().Id);
         units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(0, 0, 0));
-        Assert.Empty(units);
+        Assert.AreEqual(0, units.Count);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestMoveUnitByPath()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
         var unit = CloneUnit(_exampleUnit);
         bool success = unitManager.CreateUnit(unit);
-        Assert.True(success);
+        Assert.IsTrue(success);
         success = unitManager.MoveUnitByPath(unit.Id, new List<WeightedCubeCoordinates>() {
             new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(0, 0, 0),
                                            Cost = 5 },
@@ -179,18 +180,18 @@ public class UnitManagerTests
             new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(2, 0, -2),
                                            Cost = 5 },
         });
-        Assert.True(success);
+        Assert.IsTrue(success);
         var units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(2, 0, -2));
-        Assert.Single(units);
-        Assert.Equal(1, units.First().Id);
+        Assert.AreEqual(1, units.Count);
+        Assert.AreEqual(1, units.First().Id);
         units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(0, 0, 0));
-        Assert.Empty(units);
+        Assert.AreEqual(0, units.Count);
     }
 
-    [Fact]
+    [TestMethod]
     public void TestIsTileOccupied()
     {
-        var map = new List<List<int>>() { 
+        var map = new List<List<int>>() {
             Enumerable.Repeat(0, 16).ToList(),  // layer 0
             Enumerable.Repeat(0, 16).ToList()   // layer 1
         };
@@ -200,29 +201,29 @@ public class UnitManagerTests
         unit1.Layer = 0;
         unit1.Position = new CubeCoordinates(0, 0, 0);
         bool success = unitManager.CreateUnit(unit1);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var unit2 = CloneUnit(_exampleUnit);
         unit2.Player = 2;
         unit2.Layer = 0;
         unit2.Position = new CubeCoordinates(1, 0, -1);
         success = unitManager.CreateUnit(unit2);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var unit3 = CloneUnit(_exampleUnit);
         unit3.Player = 1;
         unit3.Layer = 1;
         unit3.Position = new CubeCoordinates(2, 0, -2);
         success = unitManager.CreateUnit(unit3);
-        Assert.True(success);
+        Assert.IsTrue(success);
         var selectedUnit = CloneUnit(_exampleUnit);
         selectedUnit.Player = 1;
         selectedUnit.Layer = 0;
         selectedUnit.Position = new CubeCoordinates(1, 1, -2);
         success = unitManager.CreateUnit(selectedUnit);
-        Assert.True(success);
-        Assert.True(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));    // occupied by unit1
-        Assert.False(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));  // unit2 with different player
-        Assert.False(unitManager.IsTileOccupied(new CubeCoordinates(2, 0, -2), selectedUnit));  // unit3 with different layer
-        Assert.False(unitManager.IsTileOccupied(new CubeCoordinates(0, 1, -1), selectedUnit));  // empty tile
+        Assert.IsTrue(success);
+        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));    // occupied by unit1
+        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));  // unit2 with different player
+        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(2, 0, -2), selectedUnit));  // unit3 with different layer
+        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(0, 1, -1), selectedUnit));  // empty tile
     }
 
     private UnitBase CloneUnit(UnitBase unit)
