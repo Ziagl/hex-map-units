@@ -1,4 +1,4 @@
-﻿namespace HexMapUnits.Models;
+﻿namespace com.hexagonsimulations.HexMapUnits.Models;
 
 internal class UnitFactory
 {

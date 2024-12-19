@@ -1,4 +1,4 @@
-﻿namespace HexMapUnits.Enums;
+﻿namespace com.hexagonsimulations.HexMapUnits.Enums;
 
 internal enum TileType
 {

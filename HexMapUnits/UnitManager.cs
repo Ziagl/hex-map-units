@@ -1,9 +1,9 @@
 ﻿using com.hexagonsimulations.Geometry.Hex;
 using com.hexagonsimulations.Geometry.Hex.Models;
-using HexMapUnits.Enums;
-using HexMapUnits.Models;
+using com.hexagonsimulations.HexMapUnits.Enums;
+using com.hexagonsimulations.HexMapUnits.Models;
 
-namespace HexMapUnits;
+namespace com.hexagonsimulations.HexMapUnits;
 
 public class UnitManager
 {

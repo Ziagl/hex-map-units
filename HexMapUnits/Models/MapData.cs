@@ -1,4 +1,6 @@
-﻿internal record MapData
+﻿namespace com.hexagonsimulations.HexMapUnits.Models; 
+
+internal record MapData
 {
     public List<List<int>> Map { get; set; } = new();
     public int Rows { get; set; }

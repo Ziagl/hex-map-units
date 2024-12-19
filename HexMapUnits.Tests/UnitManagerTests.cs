@@ -1,8 +1,8 @@
 ﻿using com.hexagonsimulations.Geometry.Hex;
 using com.hexagonsimulations.Geometry.Hex.Models;
-using HexMapUnits.Models;
+using com.hexagonsimulations.HexMapUnits.Models;
 
-namespace HexMapUnits.Tests;
+namespace com.hexagonsimulations.HexMapUnits.Tests;
 
 [TestClass]
 public sealed class UnitManagerTests

@@ -1,6 +1,6 @@
 ﻿using com.hexagonsimulations.Geometry.Hex;
 
-namespace HexMapUnits.Models;
+namespace com.hexagonsimulations.HexMapUnits.Models;
 
 public record UnitBase : UnitType
 {
