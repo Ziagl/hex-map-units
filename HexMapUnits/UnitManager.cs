@@ -154,7 +154,9 @@ public class UnitManager
         {
             movementCosts += path[i].Cost;
         }
-        if(movementCosts > unit.Movement + 1)
+        // special case to allow last item if movement points are left, but not enough
+        // to fully fit last tile or if last tile was a river tile
+        if(movementCosts > unit.Movement + 1 && path[^1].Cost != int.MaxValue)
         {
             return false;
         }
