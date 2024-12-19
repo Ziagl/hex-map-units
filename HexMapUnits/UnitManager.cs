@@ -165,6 +165,10 @@ public class UnitManager
         _map.Map[unit.Layer][destinationCoords.y * _map.Columns + destinationCoords.x] = unit.Id;
         unit.Position = path[^1].Coordinates;
         unit.Movement-= movementCosts;
+        if(unit.Movement < 0)
+        {
+            unit.Movement = 0;
+        }
         return true;
     }
 
