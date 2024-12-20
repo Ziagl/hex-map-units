@@ -217,13 +217,56 @@ public sealed class UnitManagerTests
         var selectedUnit = CloneUnit(_exampleUnit);
         selectedUnit.Player = 1;
         selectedUnit.Layer = 0;
+        selectedUnit.CanAttack = false;
         selectedUnit.Position = new CubeCoordinates(1, 1, -2);
         success = unitManager.CreateUnit(selectedUnit);
         Assert.IsTrue(success);
-        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));    // occupied by unit1
+        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));   // occupied by unit1, can not attack
+        selectedUnit.CanAttack = true;
+        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));    // occupied by unit1, can attack
         Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));  // unit2 with different player
         Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(2, 0, -2), selectedUnit));  // unit3 with different layer
         Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(0, 1, -1), selectedUnit));  // empty tile
+    }
+
+    [TestMethod]
+    public void TestCanAttack()
+    {
+        var map = new List<List<int>>() {
+            Enumerable.Repeat(0, 16).ToList(),  // layer 0
+            Enumerable.Repeat(0, 16).ToList()   // layer 1
+        };
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unit1 = CloneUnit(_exampleUnit);
+        unit1.Player = 1;
+        unit1.Layer = 0;
+        unit1.Position = new CubeCoordinates(0, 0, 0);
+        bool success = unitManager.CreateUnit(unit1);
+        Assert.IsTrue(success);
+        var unit2 = CloneUnit(_exampleUnit);
+        unit2.Player = 2;
+        unit2.Layer = 0;
+        unit2.Position = new CubeCoordinates(1, 0, -1);
+        success = unitManager.CreateUnit(unit2);
+        Assert.IsTrue(success);
+        var unit3 = CloneUnit(_exampleUnit);
+        unit3.Player = 2;
+        unit3.Layer = 1;
+        unit3.Position = new CubeCoordinates(2, 0, -2);
+        success = unitManager.CreateUnit(unit3);
+        Assert.IsTrue(success);
+        var selectedUnit = CloneUnit(_exampleUnit);
+        selectedUnit.Player = 1;
+        selectedUnit.Layer = 0;
+        selectedUnit.CanAttack = false;
+        selectedUnit.Position = new CubeCoordinates(1, 1, -2);
+        success = unitManager.CreateUnit(selectedUnit);
+        Assert.IsTrue(success);
+        Assert.IsFalse(unitManager.CanAttack(new CubeCoordinates(1, 0, -1), selectedUnit));        // enemy unit, but canAttack is false
+        selectedUnit.CanAttack = true;
+        Assert.IsTrue(unitManager.CanAttack(new CubeCoordinates(1, 0, -1), selectedUnit));        // enemy unit, but canAttack is true
+        Assert.IsFalse(unitManager.CanAttack(new CubeCoordinates(0, 0, 0), selectedUnit));        // unit of same player
+        Assert.IsFalse(unitManager.CanAttack(new CubeCoordinates(2, 0, -2), selectedUnit));       // enemy unit with different layer
     }
 
     private UnitBase CloneUnit(UnitBase unit)

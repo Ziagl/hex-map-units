@@ -252,6 +252,39 @@ public class UnitManager
            otherUnit.Layer == unit.Layer &&
            otherUnit.Player == unit.Player)
         {
+            // if unit can attack, enemy unit tile is moveable
+            // if unit can not attack, it is not possible to move to occupied fields
+            return unit.CanAttack;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Checks if given unit can attack given coordinates.
+    /// </summary>
+    /// <param name="coordinates">Tile coordinates that should checked for enemy unit.</param>
+    /// <param name="unit">Unit who wants to attack.</param>
+    /// <returns>true if coordinates contains attackable units otherwise false</returns>
+    public bool CanAttack(CubeCoordinates coordinates, UnitBase unit)
+    {
+        // early exit if unit is not able to attack
+        if(unit.CanAttack == false)
+        {
+            return false;
+        }
+        var offsetCoordinates = coordinates.ToOffset();
+        int unitId = _map.Map[unit.Layer][offsetCoordinates.y * _map.Columns + offsetCoordinates.x];
+        // early exit if map position is empty
+        if (unitId == (int)TileType.EMPTY)
+        {
+            return false;
+        }
+        // get unit and check for detail
+        var otherUnit = GetUnitById(unitId);
+        if (otherUnit != null &&
+           otherUnit.Layer == unit.Layer &&         // Todo: this is only for combat on same layer -> consider also trans layer combat!
+           otherUnit.Player != unit.Player)
+        {
             return true;
         }
         return false;
