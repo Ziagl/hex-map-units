@@ -221,10 +221,10 @@ public sealed class UnitManagerTests
         selectedUnit.Position = new CubeCoordinates(1, 1, -2);
         success = unitManager.CreateUnit(selectedUnit);
         Assert.IsTrue(success);
-        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));   // occupied by unit1, can not attack
+        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));  // occupied by enmy unit, can not attack
         selectedUnit.CanAttack = true;
-        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));    // occupied by unit1, can attack
-        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));  // unit2 with different player
+        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));   // occupied by enemy unit, can attack
+        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));    // unit1 with same player
         Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(2, 0, -2), selectedUnit));  // unit3 with different layer
         Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(0, 1, -1), selectedUnit));  // empty tile
     }

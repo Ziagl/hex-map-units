@@ -246,11 +246,19 @@ public class UnitManager
         {
             return false;
         }
-        // get unit and check for detail
+        // get unit and check for detail (same player)
         var otherUnit = GetUnitById(unitId);
-        if(otherUnit != null &&
+        if (otherUnit != null &&
            otherUnit.Layer == unit.Layer &&
            otherUnit.Player == unit.Player)
+        {
+            
+            return true;
+        }
+        // get unit and check for detail (for other player)
+        if (otherUnit != null &&
+           otherUnit.Layer == unit.Layer &&
+           otherUnit.Player != unit.Player)
         {
             // if unit can attack, enemy unit tile is moveable
             // if unit can not attack, it is not possible to move to occupied fields
