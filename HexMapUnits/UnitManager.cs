@@ -262,7 +262,7 @@ public class UnitManager
         {
             // if unit can attack, enemy unit tile is moveable
             // if unit can not attack, it is not possible to move to occupied fields
-            return unit.CanAttack;
+            return !unit.CanAttack;
         }
         return false;
     }
