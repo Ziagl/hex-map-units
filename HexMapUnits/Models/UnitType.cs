@@ -4,6 +4,7 @@ public record UnitType
 {
     // base
     public string Name = string.Empty; // the name of this unit type
+    public List<string> Images = new(); //representation of this unit in UI and/or map
     public string Description = string.Empty; // short description for what this unit is used
     public int Type; // the type of this unit (value of an enum?)
     public int Era; // min era for this unit
