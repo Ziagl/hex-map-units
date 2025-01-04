@@ -310,14 +310,8 @@ public class UnitManager
     /// <returns></returns>
     public bool IsTilePassable(CubeCoordinates coordinates, UnitBase unit)
     {
-        // if layer position is empty
         var offSetcoordinates = coordinates.ToOffset();
-        var unitId = _map.Map[unit.Layer][offSetcoordinates.y * _map.Columns + offSetcoordinates.x];
-        if (unitId != (int)TileType.EMPTY)
-        {
-            return false;
-        }
-        // if not it is unpassable or already occupied by other unit
-        return true;
+        var tileInfo = _map.Map[unit.Layer][offSetcoordinates.y * _map.Columns + offSetcoordinates.x];
+        return tileInfo == (int)TileType.EMPTY;
     }
 }
