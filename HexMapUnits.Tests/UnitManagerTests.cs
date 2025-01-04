@@ -270,6 +270,39 @@ public sealed class UnitManagerTests
         Assert.IsFalse(unitManager.CanAttack(new CubeCoordinates(2, 0, -2), selectedUnit));       // enemy unit with different layer
     }
 
+    [TestMethod]
+    public void TestIsTilePassable()
+    {
+        var map = new List<List<int>>() {
+            Enumerable.Repeat(0, 16).ToList(),  // layer 0
+            Enumerable.Repeat(5, 16).ToList()   // layer 1, impassable
+        };
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { new List<int>() { 5 }, new List<int>() { 5 } } , _unitDefinitions);
+        var unit = CloneUnit(_exampleUnit);
+        unit.Player = 1;
+        unit.Layer = 0;
+        unit.Position = new CubeCoordinates(0, 0, 0);
+        bool success = unitManager.CreateUnit(unit);
+        Assert.IsTrue(success);
+        // Test passable tile
+        bool isPassable = unitManager.IsTilePassable(unit, new CubeCoordinates(1, 0, -1));
+        Assert.IsTrue(isPassable);
+        // Test impassable tile
+        unit.Layer = 1;
+        isPassable = unitManager.IsTilePassable(unit, new CubeCoordinates(1, 0, -1));
+        Assert.IsFalse(isPassable);
+        unit.Layer = 0;
+        // Test tile occupied by another unit
+        var unit2 = CloneUnit(_exampleUnit);
+        unit2.Player = 2;
+        unit2.Layer = 0;
+        unit2.Position = new CubeCoordinates(1, 0, -1);
+        success = unitManager.CreateUnit(unit2);
+        Assert.IsTrue(success);
+        isPassable = unitManager.IsTilePassable(unit, new CubeCoordinates(1, 0, -1));
+        Assert.IsFalse(isPassable);
+    }
+
     private UnitBase CloneUnit(UnitBase unit)
     {
         return new UnitBase

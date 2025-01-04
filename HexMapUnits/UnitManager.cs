@@ -274,8 +274,8 @@ public class UnitManager
     /// <summary>
     /// Checks if given unit can attack given coordinates.
     /// </summary>
-    /// <param name="coordinates">Tile coordinates that should checked for enemy unit.</param>
-    /// <param name="unit">Unit who wants to attack.</param>
+    /// <param name="coordinates">Tile coordinates that should checked for enemy unit</param>
+    /// <param name="unit">Unit who wants to attack</param>
     /// <returns>true if coordinates contains attackable units otherwise false</returns>
     public bool CanAttack(CubeCoordinates coordinates, UnitBase unit)
     {
@@ -300,5 +300,24 @@ public class UnitManager
             return true;
         }
         return false;
+    }
+
+    /// <summary>
+    /// Checks if given tile position is passable for this unit.
+    /// </summary>
+    /// <param name="unit">unit that should be placed on given coordinates</param>
+    /// <param name="coordinates">tile coordinates that should be checked</param>
+    /// <returns></returns>
+    public bool IsTilePassable(UnitBase unit, CubeCoordinates coordinates)
+    {
+        // if layer position is empty
+        var offSetcoordinates = coordinates.ToOffset();
+        var unitId = _map.Map[unit.Layer][offSetcoordinates.y * _map.Columns + offSetcoordinates.x];
+        if (unitId != (int)TileType.EMPTY)
+        {
+            return false;
+        }
+        // if not it is unpassable or already occupied by other unit
+        return true;
     }
 }
