@@ -277,6 +277,7 @@ public sealed class UnitManagerTests
             Enumerable.Repeat(0, 16).ToList(),  // layer 0
             Enumerable.Repeat(5, 16).ToList()   // layer 1, impassable
         };
+        var tile = new CubeCoordinates(1, 0, -1);
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { new List<int>() { 5 }, new List<int>() { 5 } } , _unitDefinitions);
         var unit = CloneUnit(_exampleUnit);
         unit.Player = 1;
@@ -285,11 +286,11 @@ public sealed class UnitManagerTests
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         // Test passable tile
-        bool isPassable = unitManager.IsTilePassable(unit, new CubeCoordinates(1, 0, -1));
+        bool isPassable = unitManager.IsTilePassable(tile, unit);
         Assert.IsTrue(isPassable);
         // Test impassable tile
         unit.Layer = 1;
-        isPassable = unitManager.IsTilePassable(unit, new CubeCoordinates(1, 0, -1));
+        isPassable = unitManager.IsTilePassable(tile, unit);
         Assert.IsFalse(isPassable);
         unit.Layer = 0;
         // Test tile occupied by another unit
@@ -299,7 +300,7 @@ public sealed class UnitManagerTests
         unit2.Position = new CubeCoordinates(1, 0, -1);
         success = unitManager.CreateUnit(unit2);
         Assert.IsTrue(success);
-        isPassable = unitManager.IsTilePassable(unit, new CubeCoordinates(1, 0, -1));
+        isPassable = unitManager.IsTilePassable(tile, unit);
         Assert.IsFalse(isPassable);
     }
 

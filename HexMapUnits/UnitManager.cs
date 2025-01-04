@@ -308,7 +308,7 @@ public class UnitManager
     /// <param name="unit">unit that should be placed on given coordinates</param>
     /// <param name="coordinates">tile coordinates that should be checked</param>
     /// <returns></returns>
-    public bool IsTilePassable(UnitBase unit, CubeCoordinates coordinates)
+    public bool IsTilePassable(CubeCoordinates coordinates, UnitBase unit)
     {
         // if layer position is empty
         var offSetcoordinates = coordinates.ToOffset();
