@@ -10,6 +10,7 @@ public record UnitType
     public int Era; // min era for this unit
     public int MaxHealth; // maximum health points
     public int MaxMovement; // maximum movement points (affects movement range)
+    public int MovementType; // type of unit (f.e. move, wheel, shallow water, deep water, air, ...)
     // stats
     public int Attack; // attack points (damage in fight)
     public int RangedAttack; // ranged attack points (damage of airstrike)
