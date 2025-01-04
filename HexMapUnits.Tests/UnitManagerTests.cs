@@ -221,12 +221,13 @@ public sealed class UnitManagerTests
         selectedUnit.Position = new CubeCoordinates(1, 1, -2);
         success = unitManager.CreateUnit(selectedUnit);
         Assert.IsTrue(success);
-        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));  // occupied by enmy unit, can not attack
+        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));         // occupied by enemy unit, can not attack
+        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit, false));  // occupied by enemy unit, can attack, do not consider can attack flag
         selectedUnit.CanAttack = true;
-        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));   // occupied by enemy unit, can attack
-        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));    // unit1 with same player
-        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(2, 0, -2), selectedUnit));  // unit3 with different layer
-        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(0, 1, -1), selectedUnit));  // empty tile
+        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(1, 0, -1), selectedUnit));        // occupied by enemy unit, can attack
+        Assert.IsTrue(unitManager.IsTileOccupied(new CubeCoordinates(0, 0, 0), selectedUnit));          // unit1 with same player
+        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(2, 0, -2), selectedUnit));        // unit3 with different layer
+        Assert.IsFalse(unitManager.IsTileOccupied(new CubeCoordinates(0, 1, -1), selectedUnit));        // empty tile
     }
 
     [TestMethod]

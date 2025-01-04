@@ -236,8 +236,9 @@ public class UnitManager
     /// </summary>
     /// <param name="coordinates">tile coordinates to check</param>
     /// <param name="unit">unit with additional data</param>
+    /// <param name="considerCanAttack">by default canAttack is considered, but it can be turned of (for example to place units)</param>
     /// <returns>true if a unit o given player is on this tile otherwiese false</returns>
-    public bool IsTileOccupied(CubeCoordinates coordinates, UnitBase unit)
+    public bool IsTileOccupied(CubeCoordinates coordinates, UnitBase unit, bool considerCanAttack = true)
     {
         var offsetCoordinates = coordinates.ToOffset();
         int unitId = _map.Map[unit.Layer][offsetCoordinates.y * _map.Columns + offsetCoordinates.x];
@@ -256,13 +257,16 @@ public class UnitManager
             return true;
         }
         // get unit and check for detail (for other player)
-        if (otherUnit != null &&
-           otherUnit.Layer == unit.Layer &&
-           otherUnit.Player != unit.Player)
+        if (considerCanAttack)
         {
-            // if unit can attack, enemy unit tile is moveable
-            // if unit can not attack, it is not possible to move to occupied fields
-            return !unit.CanAttack;
+            if (otherUnit != null &&
+               otherUnit.Layer == unit.Layer &&
+               otherUnit.Player != unit.Player)
+            {
+                // if unit can attack, enemy unit tile is moveable
+                // if unit can not attack, it is not possible to move to occupied fields
+                return !unit.CanAttack;
+            }
         }
         return false;
     }
