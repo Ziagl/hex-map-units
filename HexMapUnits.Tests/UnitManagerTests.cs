@@ -19,6 +19,7 @@ public sealed class UnitManagerTests
         MaxHealth = 100,
         Movement = 10,
         MaxMovement = 10,
+        WeaponType = 1,
         Attack = 10,
         RangedAttack = 5,
         Defense = 10,

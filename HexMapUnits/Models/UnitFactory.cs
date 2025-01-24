@@ -15,6 +15,7 @@ internal class UnitFactory
         if (definition is not null)
         {
             unit.MaxMovement = definition.MaxMovement;
+            unit.WeaponType = definition.WeaponType;
             unit.Attack = definition.Attack;
             unit.Defense = definition.Defense;
             unit.Range = definition.Range;
