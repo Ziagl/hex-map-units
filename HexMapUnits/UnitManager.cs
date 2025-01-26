@@ -2,6 +2,8 @@
 using com.hexagonsimulations.HexMapBase.Geometry.Hex.Models;
 using com.hexagonsimulations.HexMapUnits.Enums;
 using com.hexagonsimulations.HexMapUnits.Models;
+using HexMapUnits.Models;
+using Microsoft.Testing.Platform.Extensions.Messages;
 
 namespace com.hexagonsimulations.HexMapUnits;
 
@@ -313,5 +315,82 @@ public class UnitManager
         var offSetcoordinates = coordinates.ToOffset();
         var tileInfo = _map.Map[unit.Layer][offSetcoordinates.y * _map.Columns + offSetcoordinates.x];
         return tileInfo == (int)TileType.EMPTY;
+    }
+
+    /// <summary>
+    /// Computes a fight between two units.
+    /// </summary>
+    /// <param name="attackerUnitId">Id of attacker unit.</param>
+    /// <param name="defenderUnitId">Id of defender unit.</param>
+    /// <param name="mods">Modifications for this combat (terrain, technology, buffs, ...)</param>
+    /// <returns>true if combat was computed successfully or fals otherwise.</returns>
+    public bool ComputeCombat(int attackerUnitId, int defenderUnitId, CombatModificators mods)
+    {
+        // get attacker
+        var attacker = GetUnitById(attackerUnitId);
+        if(attacker == null)
+        {
+            return false;
+        }
+        var defender = GetUnitById(defenderUnitId);
+        if(defender == null)
+        {
+            return false;
+        }
+        var result = ComputeCombatOutcome(attacker, defender, mods);
+        attacker.Health -= result.damageAttacker;
+        defender.Health -= result.damageDefender;
+        if (attacker.Health < 0)
+        {
+            attacker.Health = 0;
+        }
+        if (defender.Health < 0)
+        {
+            defender.Health = 0;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Same as CombuteCombat, but only returns health changes and do not update units.
+    /// </summary>
+    /// <param name="attackerUnitId">Id of attacker unit.</param>
+    /// <param name="defenderUnitId">Id of defender unit.</param>
+    /// <param name="mods">Modifications for this combat (terrain, technology, buffs, ...)</param>
+    /// <returns>Damage values of attacker and defender. Both 0 if something is wrong.</returns>
+    public (int damageAttacker, int damageDefender) SimulateCombat(int attackerUnitId, int defenderUnitId, CombatModificators mods)
+    {
+        var attacker = GetUnitById(attackerUnitId);
+        if (attacker == null)
+        {
+            return (0,0);
+        }
+        var defender = GetUnitById(defenderUnitId);
+        if (defender == null)
+        {
+            return (0,0);
+        }
+        return ComputeCombatOutcome(attacker, defender, mods);
+    }
+
+    // actual computation logic for combat between two units
+    private (int damageAttacker, int damageDefender) ComputeCombatOutcome(UnitBase attacker, UnitBase defender, CombatModificators mods)
+    {
+        // compute defaults
+        int attackerBaseStrength = 10;  // basic value so that an attacker always makes damage
+        int defenderBaseStrength = 5;
+        // compute
+        int damageDefender = (attacker.Attack + attackerBaseStrength + mods.SurfaceAttackBonus) - defender.Defense - mods.SurfaceDefenseBonus;
+        if(damageDefender < 0)
+        {
+            damageDefender = 0;
+        }
+        int damageAttacker = (defender.Attack + defenderBaseStrength) - attacker.Defense;
+        if(damageAttacker < 0)
+        {
+            damageAttacker = 0;
+        }
+        // TODO other fancy stuff
+        return (damageAttacker, damageDefender);
     }
 }

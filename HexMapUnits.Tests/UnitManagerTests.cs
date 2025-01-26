@@ -1,6 +1,7 @@
 ﻿using com.hexagonsimulations.HexMapBase.Geometry.Hex;
 using com.hexagonsimulations.HexMapBase.Geometry.Hex.Models;
 using com.hexagonsimulations.HexMapUnits.Models;
+using HexMapUnits.Models;
 
 namespace com.hexagonsimulations.HexMapUnits.Tests;
 
@@ -303,6 +304,38 @@ public sealed class UnitManagerTests
         Assert.IsTrue(success);
         isPassable = unitManager.IsTilePassable(tile, unit);
         Assert.IsFalse(isPassable);
+    }
+
+    [TestMethod]
+    public void TestComputeCombat()
+    {
+        var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() {}, _unitDefinitions);
+        var attacker = CloneUnit(_exampleUnit);
+        attacker.Player = 1;
+        attacker.Health = 100;
+        attacker.Attack = 20;
+        attacker.Defense = 10;
+        attacker.Position = new CubeCoordinates(0, 0, 0);
+        var defender = CloneUnit(_exampleUnit);
+        defender.Player = 1;
+        defender.Health = 100;
+        defender.Attack = 5;
+        defender.Defense = 5;
+        defender.Position = new CubeCoordinates(1, 0, -1);
+        unitManager.CreateUnit(attacker);
+        unitManager.CreateUnit(defender);
+        var modificators = new CombatModificators();
+        bool success = unitManager.ComputeCombat(/*attacker.Id*/999, defender.Id, modificators);
+        Assert.IsFalse(success, "Attacker id not known check failed.");
+        success = unitManager.ComputeCombat(attacker.Id, /*defender.Id*/999, modificators);
+        Assert.IsFalse(success, "Defender id not known check failed.");
+        var result = unitManager.SimulateCombat(attacker.Id, defender.Id, modificators);
+        Assert.AreEqual(100, attacker.Health, "Changed health for attacker.");
+        Assert.AreEqual(100, defender.Health, "Changed health for defender.");
+        success = unitManager.ComputeCombat(attacker.Id, defender.Id, modificators);
+        Assert.IsTrue(success, "Combat computation failed.");
+        Assert.IsTrue(attacker.Health < 100 || defender.Health < 100, "No damage for attacker.");
     }
 
     private UnitBase CloneUnit(UnitBase unit)
