@@ -3,7 +3,6 @@ using com.hexagonsimulations.HexMapBase.Geometry.Hex.Models;
 using com.hexagonsimulations.HexMapUnits.Enums;
 using com.hexagonsimulations.HexMapUnits.Models;
 using HexMapUnits.Models;
-using Microsoft.Testing.Platform.Extensions.Messages;
 
 namespace com.hexagonsimulations.HexMapUnits;
 
