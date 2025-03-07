@@ -338,6 +338,31 @@ public sealed class UnitManagerTests
         Assert.IsTrue(attacker.Health < 100 || defender.Health < 100, "No damage for attacker.");
     }
 
+    [TestMethod]
+    public void TestGetTileStatus()
+    {
+        var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
+        var unit = CloneUnit(_exampleUnit);
+        unit.Id = 1;
+        unit.Position = new CubeCoordinates(0, 0, 0);
+        unitManager.CreateUnit(unit);
+        unit = CloneUnit(_exampleUnit);
+        unit.Id = 2;
+        unit.Position = new CubeCoordinates(1, 0, -1);
+        unitManager.CreateUnit(unit);
+        int status = unitManager.GetTileStatus(new CubeCoordinates(-1, 0, 1), 0);
+        Assert.AreEqual(-2, status, $"Coordinates should be wrong, got {status}");
+        status = unitManager.GetTileStatus(new CubeCoordinates(0, 0, 0), -1);
+        Assert.AreEqual(-3, status, $"Layer should be wrong, got {status}");
+        status = unitManager.GetTileStatus(new CubeCoordinates(2, 0, -2), 0);
+        Assert.AreEqual(0, status, $"Tile should be empty, got {status}");
+        status = unitManager.GetTileStatus(new CubeCoordinates(0, 0, 0), 0);
+        Assert.AreEqual(1, status, $"Tile should be id of first unit, got {status}");
+        status = unitManager.GetTileStatus(new CubeCoordinates(1, 0, -1), 0);
+        Assert.AreEqual(2, status, $"Tile should be id of second unit, got {status}");
+    }
+
     private UnitBase CloneUnit(UnitBase unit)
     {
         return new UnitBase

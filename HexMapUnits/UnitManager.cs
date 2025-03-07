@@ -392,4 +392,28 @@ public class UnitManager
         // TODO other fancy stuff
         return (damageAttacker, damageDefender);
     }
+
+    /// <summary>
+    /// Get tile status of given coordinates.
+    /// </summary>
+    /// <param name="coordinates">Map coordinates</param>
+    /// <param name="layer">Map layer</param>
+    /// <returns>Returns ether TileType, the unitId this tile belongs, 
+    /// -2 if given coordinates are not on map or -3 if layer is not known.</returns>
+    public int GetTileStatus(CubeCoordinates coordinates, int layer)
+    {
+        var offsetCoordinates = coordinates.ToOffset();
+        // early exit if given coordinates are not on map
+        if (offsetCoordinates.x < 0 || offsetCoordinates.x >= _map.Columns ||
+            offsetCoordinates.y < 0 || offsetCoordinates.y >= _map.Rows)
+        {
+            return -2;
+        }
+        // early exit if layer is not valid
+        if (layer < 0 || layer >= _map.Map.Count)
+        {
+            return -3;
+        }
+        return _map.Map[layer][offsetCoordinates.y * _map.Columns + offsetCoordinates.x];
+    }
 }
