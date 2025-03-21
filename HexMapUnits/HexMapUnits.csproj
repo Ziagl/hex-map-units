@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Title>Hexagon Units Data and Logic Library</Title>
-    <Version>0.3.3</Version>
+    <Version>0.3.4</Version>
     <Authors>Werner Ziegelwanger</Authors>
     <Company>Hexagon Simulations</Company>
     <Description>A library for data and logic for units of tiled based games.</Description>
@@ -30,7 +30,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-	<PackageReference Include="HexMapBase" Version="0.3.4" />
+	<PackageReference Include="HexMapBase" Version="0.3.5" />
   </ItemGroup>
 
 </Project>

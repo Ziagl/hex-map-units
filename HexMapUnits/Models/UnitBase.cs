@@ -3,7 +3,7 @@ using com.hexagonsimulations.HexMapBase.Models;
 
 namespace com.hexagonsimulations.HexMapUnits.Models;
 
-public class UnitBase : IBaseEntity, ICombatEntity
+public class UnitBase : ICombatEntity
 {
     // base entity
     public int Id { get; set; }
