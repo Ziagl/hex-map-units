@@ -125,8 +125,9 @@ public class UnitManager
     /// </summary>
     /// <param name="unitId">id of unit</param>
     /// <param name="path">path to destination</param>
+    /// <param name="target">position the unit should move to</param>
     /// <returns>true if unit was moved, false if unit was not found, path is empty, path is too long or start is not given unit</returns>
-    public bool MoveUnitByPath(int unitId, List<WeightedCubeCoordinates> path)
+    public bool MoveUnitByPath(int unitId, List<WeightedCubeCoordinates> path, CubeCoordinates target)
     {
         UnitBase? unit = null;
         if(!_unitStore.TryGetValue(unitId, out unit))
@@ -144,20 +145,40 @@ public class UnitManager
             return false;
         }
         // early exit if destination is not passable
-        var destinationCoords = path[^1].Coordinates.ToOffset();
+        var destinationCoords = target.ToOffset();
         if (_map.Map[unit.Layer][destinationCoords.y * _map.Columns + destinationCoords.x] != (int)TileType.EMPTY)
+        {
+            return false;
+        }
+        // early exit if target is not in weighted Path
+        bool found = false;
+        foreach(var tile in path)
+        {
+            if(tile.Coordinates == target)
+            {
+                found = true;
+                break;
+            }
+        }
+        if(!found)
         {
             return false;
         }
         // early exit if path costs too long for correct movement
         var movementCosts = 0;
+        var index = 0;
         for(int i = 1; i < path.Count; i++)
         {
+            index = i;
             movementCosts += path[i].Cost;
+            if(target == path[i].Coordinates)
+            {
+                break;
+            }
         }
         // special case to allow last item if movement points are left, but not enough
         // to fully fit last tile or if last tile was a river tile
-        if(movementCosts > unit.Movement + 1 && path[^1].Cost != int.MaxValue)
+        if(movementCosts > unit.Movement + 1 && path[index].Cost != int.MaxValue)
         {
             return false;
         }
@@ -166,7 +187,7 @@ public class UnitManager
         _map.Map[unit.Layer][oldCoordinates.y * _map.Columns + oldCoordinates.x] = (int)TileType.EMPTY;
         // set unit to new position
         _map.Map[unit.Layer][destinationCoords.y * _map.Columns + destinationCoords.x] = unit.Id;
-        unit.Position = path[^1].Coordinates;
+        unit.Position = target;
         unit.Movement-= movementCosts;
         if(unit.Movement < 0)
         {

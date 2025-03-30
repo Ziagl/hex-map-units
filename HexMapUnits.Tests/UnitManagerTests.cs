@@ -180,13 +180,40 @@ public sealed class UnitManagerTests
                                            Cost = 5 },
             new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(2, 0, -2),
                                            Cost = 5 },
-        });
+        }, new CubeCoordinates(2, 0, -2));
         Assert.IsTrue(success);
         var units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(2, 0, -2));
         Assert.AreEqual(1, units.Count);
         Assert.AreEqual(1, units.First().Id);
         units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(0, 0, 0));
         Assert.AreEqual(0, units.Count);
+        Assert.AreEqual(0, unit.Movement);
+        // move back
+        unit.Movement += 5;
+        success = unitManager.MoveUnitByPath(unit.Id, new List<WeightedCubeCoordinates>() {
+            new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(2, 0, -2),
+                                           Cost = 5 },
+            new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(1, 0, -1),
+                                           Cost = 5 },
+            new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(0, 0, 0),
+                                           Cost = 5 },
+        }, new CubeCoordinates(2, 0, -2));
+        Assert.IsFalse(success);
+        success = unitManager.MoveUnitByPath(unit.Id, new List<WeightedCubeCoordinates>() {
+            new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(2, 0, -2),
+                                           Cost = 5 },
+            new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(1, 0, -1),
+                                           Cost = 5 },
+            new WeightedCubeCoordinates(){ Coordinates = new CubeCoordinates(0, 0, 0),
+                                           Cost = 5 },
+        }, new CubeCoordinates(1, 0, -1));
+        Assert.IsTrue(success);
+        units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(1, 0, -1));
+        Assert.AreEqual(1, units.Count);
+        Assert.AreEqual(1, units.First().Id);
+        units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(0, 0, 0));
+        Assert.AreEqual(0, units.Count);
+        Assert.AreEqual(0, unit.Movement);
     }
 
     [TestMethod]
