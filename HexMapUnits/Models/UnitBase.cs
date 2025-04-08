@@ -25,6 +25,8 @@ public class UnitBase : ICombatEntity
     public int RangedAttack { get; set; } // ranged attack points (damage of airstrike)
     public int Defense { get; set; } // defence points (how much damage is reduced)
     public int Range { get; set; } // attack range (how far can this unit attack)
+    // scouting
+    public int Sight { get; set; } // how far can this unit see (in hexes)
     // flags
     public bool CanAttack { get; set; } // can this unit attack?
     public bool CanBuildCity { get; set; } // can this unit build a new city?

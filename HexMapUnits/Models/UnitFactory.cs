@@ -19,6 +19,7 @@ internal class UnitFactory
             unit.Attack = definition.Attack;
             unit.Defense = definition.Defense;
             unit.Range = definition.Range;
+            unit.Sight = definition.Sight;
             unit.CanAttack = definition.CanAttack;
             unit.ProductionCost = definition.ProductionCost;
             unit.PurchaseCost = definition.PurchaseCost;

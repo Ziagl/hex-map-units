@@ -24,6 +24,7 @@ public sealed class UnitManagerTests
         RangedAttack = 5,
         Defense = 10,
         Range = 1,
+        Sight = 1,
         CanAttack = false,
         CanBuildCity = false,
         Goods = new() { { 1, 2 } },
