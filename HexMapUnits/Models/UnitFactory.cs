@@ -23,6 +23,7 @@ internal class UnitFactory
             unit.CanAttack = definition.CanAttack;
             unit.ProductionCost = definition.ProductionCost;
             unit.PurchaseCost = definition.PurchaseCost;
+            unit.UpkeepCost = definition.UpkeepCost;
         }
     }
 }

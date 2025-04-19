@@ -30,6 +30,7 @@ public sealed class UnitManagerTests
         Goods = new() { { 1, 2 } },
         ProductionCost = 0,
         PurchaseCost = 0,
+        UpkeepCost = 0,
     };
 
     public UnitManagerTests()
@@ -376,7 +377,8 @@ public sealed class UnitManagerTests
             Range = unit.Range,
             CanAttack = unit.CanAttack,
             ProductionCost = unit.ProductionCost,
-            PurchaseCost = unit.PurchaseCost
+            PurchaseCost = unit.PurchaseCost,
+            UpkeepCost = unit.UpkeepCost,
         };
     }
 }

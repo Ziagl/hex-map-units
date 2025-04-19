@@ -34,6 +34,7 @@ public class UnitBase : ICombatEntity
     public Dictionary<int, int> Goods { get; set; } = new(); // goods needed to produce this unit
     public int ProductionCost { get; set; } // amount of production needed to build this unit
     public int PurchaseCost { get; set; } // amount of gold needed to purchase this unit
+    public int UpkeepCost { get; set; } // amount of gold needed to upkeep this unit
     // position
     public CubeCoordinates Position { get; set; } // its position on the map
     public int Layer { get; set; } // index of layer this unit is on
