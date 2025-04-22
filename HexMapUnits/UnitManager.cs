@@ -360,4 +360,28 @@ public class UnitManager
         }
         return _map.Map[layer][offsetCoordinates.y * _map.Columns + offsetCoordinates.x];
     }
+
+    /// <summary>
+    /// Computes the combat outcome of two units.
+    /// </summary>
+    /// <param name="attacker">Attacker unit</param>
+    /// <param name="defender">Defender unit</param>
+    /// <param name="mods">Modification for this fight (environment, technology, ...)</param>
+    /// <returns>Computed damage values for given combat inputs.</returns>
+    public (int damageAttacker, int damageDefender) ComputeCombatOutcome(ICombatEntity attacker, ICombatEntity defender, CombatModificators mods)
+    {
+        // basic combat algorithm
+        int damageDefender = (attacker.Attack + mods.AttackerBaseStrength + mods.AttackerSurfaceBonus) - defender.Defense - mods.DefenderSurfaceBonus;
+        if (damageDefender < 0)
+        {
+            damageDefender = 0;
+        }
+        int damageAttacker = (defender.Attack + mods.DefenderBaseStrength) - attacker.Defense;
+        if (damageAttacker < 0)
+        {
+            damageAttacker = 0;
+        }
+        // TODO other fancy stuff
+        return (damageAttacker, damageDefender);
+    }
 }

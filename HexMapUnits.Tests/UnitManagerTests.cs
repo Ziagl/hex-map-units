@@ -39,7 +39,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestCreateUnit()
+    public void CreateUnit()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
@@ -50,7 +50,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestCreateUnitInvalidLayer()
+    public void CreateUnitInvalidLayer()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
@@ -61,7 +61,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestCreateUnitPositionOccupied()
+    public void CreateUnitPositionOccupied()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         exampleMap[0] = 1;
@@ -72,7 +72,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestCreateUnitAddTwoUnitsOnSameCoordinate()
+    public void CreateUnitAddTwoUnitsOnSameCoordinate()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
@@ -85,7 +85,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestGetUnitsOfPlayer()
+    public void GetUnitsOfPlayer()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
@@ -111,7 +111,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestRemoveUnit()
+    public void RemoveUnit()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
@@ -125,7 +125,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestGetUnitById()
+    public void GetUnitById()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
@@ -138,7 +138,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestGetUnitsByCoordinates()
+    public void GetUnitsByCoordinates()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
@@ -151,7 +151,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestMoveUnit()
+    public void MoveUnit()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
@@ -168,7 +168,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestMoveUnitByPath()
+    public void MoveUnitByPath()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
@@ -219,7 +219,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestIsTileOccupied()
+    public void IsTileOccupied()
     {
         var map = new List<List<int>>() {
             Enumerable.Repeat(0, 16).ToList(),  // layer 0
@@ -261,7 +261,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestCanAttack()
+    public void CanAttack()
     {
         var map = new List<List<int>>() {
             Enumerable.Repeat(0, 16).ToList(),  // layer 0
@@ -301,7 +301,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestIsTilePassable()
+    public void IsTilePassable()
     {
         var map = new List<List<int>>() {
             Enumerable.Repeat(0, 16).ToList(),  // layer 0
@@ -335,7 +335,7 @@ public sealed class UnitManagerTests
     }
 
     [TestMethod]
-    public void TestGetTileStatus()
+    public void GetTileStatus()
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
@@ -357,6 +357,23 @@ public sealed class UnitManagerTests
         Assert.AreEqual(1, status, $"Tile should be id of first unit, got {status}");
         status = unitManager.GetTileStatus(new CubeCoordinates(1, 0, -1), 0);
         Assert.AreEqual(2, status, $"Tile should be id of second unit, got {status}");
+    }
+
+    [TestMethod]
+    public void ComputeCombatOutcome()
+    {
+        var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
+        var attacker = CloneUnit(_exampleUnit);
+        var defender = CloneUnit(_exampleUnit);
+        var mods = new CombatModificators() {
+            AttackerBaseStrength = 10,
+            DefenderBaseStrength = 5,
+        };
+        var output = unitManager.ComputeCombatOutcome(attacker, defender, mods);
+        Assert.AreNotEqual(output.damageAttacker, 0);
+        Assert.AreNotEqual(output.damageDefender, 0);
+        Assert.AreNotEqual(output.damageAttacker, output.damageDefender);
     }
 
     private UnitBase CloneUnit(UnitBase unit)
