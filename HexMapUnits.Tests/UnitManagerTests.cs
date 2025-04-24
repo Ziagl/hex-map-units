@@ -20,9 +20,8 @@ public sealed class UnitManagerTests
         Movement = 10,
         MaxMovement = 10,
         WeaponType = 1,
-        Attack = 10,
+        CombatStrength = 10,
         RangedAttack = 5,
-        Defense = 10,
         Range = 1,
         Sight = 1,
         CanAttack = false,
@@ -31,6 +30,7 @@ public sealed class UnitManagerTests
         ProductionCost = 0,
         PurchaseCost = 0,
         UpkeepCost = 0,
+        Seed = 0
     };
 
     public UnitManagerTests()
@@ -362,18 +362,22 @@ public sealed class UnitManagerTests
     [TestMethod]
     public void ComputeCombatOutcome()
     {
+        var random = new Random();
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
         var attacker = CloneUnit(_exampleUnit);
         var defender = CloneUnit(_exampleUnit);
-        var mods = new CombatModificators() {
-            AttackerBaseStrength = 10,
-            DefenderBaseStrength = 5,
-        };
-        var output = unitManager.ComputeCombatOutcome(attacker, defender, mods);
-        Assert.AreNotEqual(output.damageAttacker, 0);
-        Assert.AreNotEqual(output.damageDefender, 0);
-        Assert.AreNotEqual(output.damageAttacker, output.damageDefender);
+        attacker.Seed = random.Next();
+        defender.Seed = random.Next();
+        var mods = new CombatModificators();
+        // combat between units that are equally strong results in values
+        // between 24 and 36 (depending on random value)
+        for (int i = 0; i < 10; ++i)
+        {
+            var output = unitManager.ComputeCombatOutcome(attacker, defender, mods);
+            Assert.IsTrue(output.damageAttacker >= 24 && output.damageAttacker <= 36);
+            Assert.IsTrue(output.damageDefender >= 24 && output.damageDefender <= 36);
+        }
     }
 
     private UnitBase CloneUnit(UnitBase unit)
@@ -389,13 +393,13 @@ public sealed class UnitManagerTests
             MaxHealth = unit.MaxHealth,
             Movement = unit.Movement,
             MaxMovement = unit.MaxMovement,
-            Attack = unit.Attack,
-            Defense = unit.Defense,
+            CombatStrength = unit.CombatStrength,
             Range = unit.Range,
             CanAttack = unit.CanAttack,
             ProductionCost = unit.ProductionCost,
             PurchaseCost = unit.PurchaseCost,
             UpkeepCost = unit.UpkeepCost,
+            Seed = unit.Seed,
         };
     }
 }

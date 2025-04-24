@@ -21,10 +21,11 @@ public class UnitBase : ICombatEntity
     public int Movement { get; set; } // current movement points
     // combat
     public int WeaponType { get; set; } // type of weapon/combat of this unit (infantry, cavalry, ...)
-    public int Attack { get; set; } // attack points (damage in fight)
+    public int CombatStrength { get; set; } // attack and defense points (damage in fight)
     public int RangedAttack { get; set; } // ranged attack points (damage of airstrike)
-    public int Defense { get; set; } // defence points (how much damage is reduced)
     public int Range { get; set; } // attack range (how far can this unit attack)
+    // random number
+    public int Seed { get; set; } // random number seed for this unit for this turn
     // scouting
     public int Sight { get; set; } // how far can this unit see (in hexes)
     // flags

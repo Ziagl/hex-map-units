@@ -370,18 +370,31 @@ public class UnitManager
     /// <returns>Computed damage values for given combat inputs.</returns>
     public (int damageAttacker, int damageDefender) ComputeCombatOutcome(ICombatEntity attacker, ICombatEntity defender, CombatModificators mods)
     {
-        // basic combat algorithm
-        int damageDefender = (attacker.Attack + mods.AttackerBaseStrength + mods.AttackerSurfaceBonus) - defender.Defense - mods.DefenderSurfaceBonus;
-        if (damageDefender < 0)
+        // an attacker has a seed value, so multiple tries will have the same random value
+        Random randomAttacker = new Random(attacker.Seed);
+        Random randomDefender = new Random(defender.Seed);
+
+        // calculate combat strength with external bonus
+        int attackerCombatStrength = attacker.CombatStrength + mods.TerrainBonus + mods.WeaponBonus + mods.FortificationBonus;
+        int defenderCombatStrength = defender.CombatStrength;
+
+        // calculate combat damage based on Civ6 calculation
+        int combatDiff = attackerCombatStrength - defenderCombatStrength;
+        double randomFactor = randomAttacker.NextDouble() * 0.4 + 0.8; // generates a value between 0.8 and 1.2
+        int damageDefender = (int)(30.0 * Math.Exp(0.04 * combatDiff) * randomFactor);
+        int damageAttacker = 0;
+        if(mods.RangedAttack == false)
         {
-            damageDefender = 0;
+            randomFactor = randomDefender.NextDouble() * 0.4 + 0.8;
+            damageAttacker = (int)(30.0 * Math.Exp(0.04 * -combatDiff) * randomFactor);
         }
-        int damageAttacker = (defender.Attack + mods.DefenderBaseStrength) - attacker.Defense;
-        if (damageAttacker < 0)
+        // generate a new seed
+        attacker.Seed = randomAttacker.Next(0, int.MaxValue);
+        if(mods.RangedAttack == false)
         {
-            damageAttacker = 0;
+            defender.Seed = randomDefender.Next(0, int.MaxValue);
         }
-        // TODO other fancy stuff
+
         return (damageAttacker, damageDefender);
     }
 }

@@ -16,14 +16,14 @@ internal class UnitFactory
         {
             unit.MaxMovement = definition.MaxMovement;
             unit.WeaponType = definition.WeaponType;
-            unit.Attack = definition.Attack;
-            unit.Defense = definition.Defense;
+            unit.CombatStrength = definition.CombatStrength;
             unit.Range = definition.Range;
             unit.Sight = definition.Sight;
             unit.CanAttack = definition.CanAttack;
             unit.ProductionCost = definition.ProductionCost;
             unit.PurchaseCost = definition.PurchaseCost;
             unit.UpkeepCost = definition.UpkeepCost;
+            unit.Seed = new Random().Next();
         }
     }
 }
