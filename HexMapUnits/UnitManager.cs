@@ -375,8 +375,8 @@ public class UnitManager
         Random randomDefender = new Random(defender.Seed);
 
         // calculate combat strength with external bonus
-        int attackerCombatStrength = attacker.CombatStrength + mods.TerrainBonus + mods.WeaponBonus + mods.FortificationBonus;
-        int defenderCombatStrength = defender.CombatStrength;
+        int attackerCombatStrength = attacker.CombatStrength + mods.AttackerTerrainBonus + mods.AttackerWeaponBonus + mods.AttackerFortificationBonus;
+        int defenderCombatStrength = defender.CombatStrength + mods.DefenderTerrainBonus + mods.DefenderWeaponBonus + mods.DefenderFortificationBonus;
 
         // calculate combat damage based on Civ6 calculation
         int combatDiff = attackerCombatStrength - defenderCombatStrength;
