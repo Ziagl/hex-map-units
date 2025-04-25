@@ -24,6 +24,7 @@ public class UnitBase : ICombatEntity
     public int CombatStrength { get; set; } // attack and defense points (damage in fight)
     public int RangedAttack { get; set; } // ranged attack points (damage of airstrike)
     public int Range { get; set; } // attack range (how far can this unit attack)
+    public int Fortification { get; set; } // fortification level (if entity does not move +1 level)
     // random number
     public int Seed { get; set; } // random number seed for this unit for this turn
     // scouting
