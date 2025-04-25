@@ -8,5 +8,6 @@ public class CombatModificators
     public int DefenderFortificationBonus = 0;
     public int AttackerWeaponBonus = 0; // weapon bonus positive or negative (depending on weapon types of both units, for example cavalry vs artillery)
     public int DefenderWeaponBonus = 0;
-    public bool RangedAttack = false;  // if this is an ranged attack, attacker will not receive damage
+    public bool RangedAttack = false;  // if this is an ranged attack
+    public bool NoCounterAttack = false; // attacker will not receive damage (needed for cities or civilian units)
 }

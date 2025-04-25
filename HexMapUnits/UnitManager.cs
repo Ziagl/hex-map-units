@@ -375,7 +375,6 @@ public class UnitManager
         Random randomDefender = new Random(defender.Seed);
 
         // calculate combat strength with external bonus
-        
         int attackerCombatStrength = attacker.CombatStrength + mods.AttackerTerrainBonus + mods.AttackerWeaponBonus + mods.AttackerFortificationBonus;
         int defenderCombatStrength = defender.CombatStrength + mods.DefenderTerrainBonus + mods.DefenderWeaponBonus + mods.DefenderFortificationBonus;
 
@@ -391,7 +390,7 @@ public class UnitManager
         int damageDefender = (int)(30.0 * Math.Exp(0.04 * combatDiff) * randomFactor);
         int damageAttacker = 0;
         attacker.Seed = randomAttacker.Next(0, int.MaxValue); // updates seed
-        if(mods.RangedAttack == false)
+        if(mods.RangedAttack == false && mods.NoCounterAttack == false)
         {
             randomFactor = randomDefender.NextDouble() * 0.4 + 0.8;
             damageAttacker = (int)(30.0 * Math.Exp(0.04 * -combatDiff) * randomFactor);

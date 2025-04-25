@@ -378,6 +378,14 @@ public sealed class UnitManagerTests
             Assert.IsTrue(output.damageAttacker >= 24 && output.damageAttacker <= 36);
             Assert.IsTrue(output.damageDefender >= 24 && output.damageDefender <= 36);
         }
+        // ranged attack and no counter attack leads to 0 damage for attacking units
+        mods.RangedAttack = true;
+        var result = unitManager.ComputeCombatOutcome(attacker, defender, mods);
+        Assert.AreEqual(0, result.damageAttacker, "Attacker received damage, but it was a ranged attack.");
+        mods.RangedAttack = false;
+        mods.NoCounterAttack = true;
+        result = unitManager.ComputeCombatOutcome(attacker, defender, mods);
+        Assert.AreEqual(0, result.damageAttacker, "attacker received damage, but NoCounterAttack was true.");
     }
 
     private UnitBase CloneUnit(UnitBase unit)
