@@ -375,24 +375,27 @@ public class UnitManager
         Random randomDefender = new Random(defender.Seed);
 
         // calculate combat strength with external bonus
+        
         int attackerCombatStrength = attacker.CombatStrength + mods.AttackerTerrainBonus + mods.AttackerWeaponBonus + mods.AttackerFortificationBonus;
         int defenderCombatStrength = defender.CombatStrength + mods.DefenderTerrainBonus + mods.DefenderWeaponBonus + mods.DefenderFortificationBonus;
+
+        // if this is a ranged attack, also add RangedAttack
+        if (mods.RangedAttack == true)
+        {
+            attackerCombatStrength+= attacker.RangedAttack;
+        }
 
         // calculate combat damage based on Civ6 calculation
         int combatDiff = attackerCombatStrength - defenderCombatStrength;
         double randomFactor = randomAttacker.NextDouble() * 0.4 + 0.8; // generates a value between 0.8 and 1.2
         int damageDefender = (int)(30.0 * Math.Exp(0.04 * combatDiff) * randomFactor);
         int damageAttacker = 0;
+        attacker.Seed = randomAttacker.Next(0, int.MaxValue); // updates seed
         if(mods.RangedAttack == false)
         {
             randomFactor = randomDefender.NextDouble() * 0.4 + 0.8;
             damageAttacker = (int)(30.0 * Math.Exp(0.04 * -combatDiff) * randomFactor);
-        }
-        // generate a new seed
-        attacker.Seed = randomAttacker.Next(0, int.MaxValue);
-        if(mods.RangedAttack == false)
-        {
-            defender.Seed = randomDefender.Next(0, int.MaxValue);
+            defender.Seed = randomDefender.Next(0, int.MaxValue); // updates seed
         }
 
         return (damageAttacker, damageDefender);
