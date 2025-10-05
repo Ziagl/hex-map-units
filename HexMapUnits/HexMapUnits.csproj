@@ -30,7 +30,7 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-	<PackageReference Include="HexMapBase" Version="0.3.9" />
+	<PackageReference Include="HexMapBase" Version="0.4.1" />
   </ItemGroup>
 
 </Project>
