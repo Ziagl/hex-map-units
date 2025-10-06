@@ -1,6 +1,7 @@
 ﻿using com.hexagonsimulations.HexMapBase.Models;
 using com.hexagonsimulations.HexMapUnits.Models;
 using HexMapUnits.Models;
+using HexMapUnits.Tests;
 
 namespace com.hexagonsimulations.HexMapUnits.Tests;
 
@@ -8,30 +9,6 @@ namespace com.hexagonsimulations.HexMapUnits.Tests;
 public sealed class UnitManagerTests
 {
     private readonly List<UnitBase> _unitDefinitions = new();
-    private readonly UnitBase _exampleUnit = new()
-    {
-        Id = 0,
-        Position = new CubeCoordinates(0, 0, 0),
-        Layer = 0,
-        Player = 1,
-        Type = 1,
-        Health = 100,
-        MaxHealth = 100,
-        Movement = 10,
-        MaxMovement = 10,
-        WeaponType = 1,
-        CombatStrength = 10,
-        RangedAttack = 5,
-        Range = 1,
-        Sight = 1,
-        CanAttack = false,
-        CanBuildCity = false,
-        Goods = new() { { 1, 2 } },
-        ProductionCost = 0,
-        PurchaseCost = 0,
-        UpkeepCost = 0,
-        Seed = 0
-    };
 
     public UnitManagerTests()
     {
@@ -43,7 +20,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         Assert.AreNotEqual(0, unit.Id);
@@ -54,7 +31,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         unit.Layer = 1;
         bool success = unitManager.CreateUnit(unit);
         Assert.IsFalse(success);
@@ -66,7 +43,7 @@ public sealed class UnitManagerTests
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         exampleMap[0] = 1;
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>() { new List<int>() { 1 } }, _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsFalse(success);
     }
@@ -76,10 +53,10 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
-        var unit2 = CloneUnit(_exampleUnit);
+        var unit2 = Utils.GetExampleUnit();
         success = unitManager.CreateUnit(unit2);
         Assert.IsFalse(success);
     }
@@ -89,16 +66,16 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         unit.Player = 1;
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
-        var unit2 = CloneUnit(_exampleUnit);
+        var unit2 = Utils.GetExampleUnit();
         unit2.Player = 2;
         unit2.Position = new CubeCoordinates(1, 0, -1);
         success = unitManager.CreateUnit(unit2);
         Assert.IsTrue(success);
-        var unit3 = CloneUnit(_exampleUnit);
+        var unit3 = Utils.GetExampleUnit();
         unit3.Player = 1;
         unit3.Position = new CubeCoordinates(2, 0, -2);
         success = unitManager.CreateUnit(unit3);
@@ -115,7 +92,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         success = unitManager.RemoveUnit(unit.Id);
@@ -129,7 +106,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         var unit2 = unitManager.GetUnitById(unit.Id);
@@ -142,7 +119,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         var units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(0, 0, 0));
@@ -155,7 +132,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         success = unitManager.MoveUnit(unit.Id, new CubeCoordinates(1, 0, -1));
@@ -172,7 +149,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         success = unitManager.MoveUnitByPath(unit.Id, new List<WeightedCubeCoordinates>() {
@@ -226,25 +203,25 @@ public sealed class UnitManagerTests
             Enumerable.Repeat(0, 16).ToList()   // layer 1
         };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit1 = CloneUnit(_exampleUnit);
+        var unit1 = Utils.GetExampleUnit();
         unit1.Player = 1;
         unit1.Layer = 0;
         unit1.Position = new CubeCoordinates(0, 0, 0);
         bool success = unitManager.CreateUnit(unit1);
         Assert.IsTrue(success);
-        var unit2 = CloneUnit(_exampleUnit);
+        var unit2 = Utils.GetExampleUnit();
         unit2.Player = 2;
         unit2.Layer = 0;
         unit2.Position = new CubeCoordinates(1, 0, -1);
         success = unitManager.CreateUnit(unit2);
         Assert.IsTrue(success);
-        var unit3 = CloneUnit(_exampleUnit);
+        var unit3 = Utils.GetExampleUnit();
         unit3.Player = 1;
         unit3.Layer = 1;
         unit3.Position = new CubeCoordinates(2, 0, -2);
         success = unitManager.CreateUnit(unit3);
         Assert.IsTrue(success);
-        var selectedUnit = CloneUnit(_exampleUnit);
+        var selectedUnit = Utils.GetExampleUnit();
         selectedUnit.Player = 1;
         selectedUnit.Layer = 0;
         selectedUnit.CanAttack = false;
@@ -268,25 +245,25 @@ public sealed class UnitManagerTests
             Enumerable.Repeat(0, 16).ToList()   // layer 1
         };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit1 = CloneUnit(_exampleUnit);
+        var unit1 = Utils.GetExampleUnit();
         unit1.Player = 1;
         unit1.Layer = 0;
         unit1.Position = new CubeCoordinates(0, 0, 0);
         bool success = unitManager.CreateUnit(unit1);
         Assert.IsTrue(success);
-        var unit2 = CloneUnit(_exampleUnit);
+        var unit2 = Utils.GetExampleUnit();
         unit2.Player = 2;
         unit2.Layer = 0;
         unit2.Position = new CubeCoordinates(1, 0, -1);
         success = unitManager.CreateUnit(unit2);
         Assert.IsTrue(success);
-        var unit3 = CloneUnit(_exampleUnit);
+        var unit3 = Utils.GetExampleUnit();
         unit3.Player = 2;
         unit3.Layer = 1;
         unit3.Position = new CubeCoordinates(2, 0, -2);
         success = unitManager.CreateUnit(unit3);
         Assert.IsTrue(success);
-        var selectedUnit = CloneUnit(_exampleUnit);
+        var selectedUnit = Utils.GetExampleUnit();
         selectedUnit.Player = 1;
         selectedUnit.Layer = 0;
         selectedUnit.CanAttack = false;
@@ -309,7 +286,7 @@ public sealed class UnitManagerTests
         };
         var tile = new CubeCoordinates(1, 0, -1);
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { new List<int>() { 5 }, new List<int>() { 5 } } , _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         unit.Player = 1;
         unit.Layer = 0;
         unit.Position = new CubeCoordinates(0, 0, 0);
@@ -324,7 +301,7 @@ public sealed class UnitManagerTests
         Assert.IsFalse(isPassable);
         unit.Layer = 0;
         // Test tile occupied by another unit
-        var unit2 = CloneUnit(_exampleUnit);
+        var unit2 = Utils.GetExampleUnit();
         unit2.Player = 2;
         unit2.Layer = 0;
         unit2.Position = new CubeCoordinates(1, 0, -1);
@@ -339,11 +316,11 @@ public sealed class UnitManagerTests
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
-        var unit = CloneUnit(_exampleUnit);
+        var unit = Utils.GetExampleUnit();
         unit.Id = 1;
         unit.Position = new CubeCoordinates(0, 0, 0);
         unitManager.CreateUnit(unit);
-        unit = CloneUnit(_exampleUnit);
+        unit = Utils.GetExampleUnit();
         unit.Id = 2;
         unit.Position = new CubeCoordinates(1, 0, -1);
         unitManager.CreateUnit(unit);
@@ -365,8 +342,8 @@ public sealed class UnitManagerTests
         var random = new Random();
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
-        var attacker = CloneUnit(_exampleUnit);
-        var defender = CloneUnit(_exampleUnit);
+        var attacker = Utils.GetExampleUnit();
+        var defender = Utils.GetExampleUnit();
         attacker.Seed = random.Next();
         defender.Seed = random.Next();
         var mods = new CombatModificators();
@@ -386,28 +363,5 @@ public sealed class UnitManagerTests
         mods.NoCounterAttack = true;
         result = unitManager.ComputeCombatOutcome(attacker, defender, mods);
         Assert.AreEqual(0, result.damageAttacker, "attacker received damage, but NoCounterAttack was true.");
-    }
-
-    private UnitBase CloneUnit(UnitBase unit)
-    {
-        return new UnitBase
-        {
-            Id = unit.Id,
-            Position = unit.Position,
-            Layer = unit.Layer,
-            Player = unit.Player,
-            Type = unit.Type,
-            Health = unit.Health,
-            MaxHealth = unit.MaxHealth,
-            Movement = unit.Movement,
-            MaxMovement = unit.MaxMovement,
-            CombatStrength = unit.CombatStrength,
-            Range = unit.Range,
-            CanAttack = unit.CanAttack,
-            ProductionCost = unit.ProductionCost,
-            PurchaseCost = unit.PurchaseCost,
-            UpkeepCost = unit.UpkeepCost,
-            Seed = unit.Seed,
-        };
     }
 }

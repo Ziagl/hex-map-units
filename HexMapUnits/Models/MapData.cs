@@ -1,8 +1,21 @@
-﻿namespace com.hexagonsimulations.HexMapUnits.Models; 
+﻿namespace com.hexagonsimulations.HexMapBase.Models;
 
-internal record MapData
+// Made serializable by keeping it as a simple POCO with settable properties.
+internal class MapData
 {
-    public List<List<int>> Map { get; set; } = new();
     public int Rows { get; set; }
     public int Columns { get; set; }
+    public List<List<int>> Map { get; set; } = new();
+
+    public MapData() { }
+
+    public MapData Clone()
+    {
+        return new MapData
+        {
+            Rows = Rows,
+            Columns = Columns,
+            Map = Map.Select(layer => new List<int>(layer)).ToList()
+        };
+    }
 }

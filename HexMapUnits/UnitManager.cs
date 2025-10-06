@@ -3,6 +3,8 @@ using com.hexagonsimulations.HexMapBase.Models;
 using com.hexagonsimulations.HexMapUnits.Enums;
 using com.hexagonsimulations.HexMapUnits.Models;
 using HexMapUnits.Models;
+using System.Text.Json;
+using System.Linq;
 
 namespace com.hexagonsimulations.HexMapUnits;
 
@@ -12,6 +14,8 @@ public class UnitManager
     private int _lastUnitStoreId = 0;
     private MapData _map = new();
     private UnitFactory _factory;
+
+    private UnitManager() { }
 
     public UnitManager(List<List<int>> map, int rows, int columns, List<List<int>> notPassableTiles, List<UnitBase> unitDefinitions)
     {
@@ -23,9 +27,9 @@ public class UnitManager
         foreach (var layer in map)
         {
             List<int> layerMap = new();
-            foreach(var tile in layer)
+            foreach (var tile in layer)
             {
-                if(notPassableTiles.Count == map.Count && notPassableTiles[layerIndex].Contains(tile))
+                if (notPassableTiles.Count == map.Count && notPassableTiles[layerIndex].Contains(tile))
                 {
                     layerMap.Add((int)TileType.UNPASSABLE);
                 }
@@ -79,7 +83,7 @@ public class UnitManager
     public bool RemoveUnit(int unitId)
     {
         UnitBase? unit = null;
-        if(!_unitStore.TryGetValue(unitId, out unit) || unit is null)
+        if (!_unitStore.TryGetValue(unitId, out unit) || unit is null)
         {
             return false;
         }
@@ -107,7 +111,7 @@ public class UnitManager
         // early exit if destination is not passable
         var newCoordinates = destination.ToOffset();
         var oldCoordinates = unit.Position.ToOffset();
-        if(_map.Map[unit.Layer][newCoordinates.y * _map.Columns + newCoordinates.x] != (int)TileType.EMPTY)
+        if (_map.Map[unit.Layer][newCoordinates.y * _map.Columns + newCoordinates.x] != (int)TileType.EMPTY)
         {
             return false;
         }
@@ -130,17 +134,17 @@ public class UnitManager
     public bool MoveUnitByPath(int unitId, List<WeightedCubeCoordinates> path, CubeCoordinates target)
     {
         UnitBase? unit = null;
-        if(!_unitStore.TryGetValue(unitId, out unit))
+        if (!_unitStore.TryGetValue(unitId, out unit))
         {
             return false;
         }
         // early exit if path is empty
-        if(path.Count == 0) 
+        if (path.Count == 0)
         {
             return false;
         }
         // early exit if start is not given unit
-        if(unit.Position != path[0].Coordinates)
+        if (unit.Position != path[0].Coordinates)
         {
             return false;
         }
@@ -152,33 +156,33 @@ public class UnitManager
         }
         // early exit if target is not in weighted Path
         bool found = false;
-        foreach(var tile in path)
+        foreach (var tile in path)
         {
-            if(tile.Coordinates == target)
+            if (tile.Coordinates == target)
             {
                 found = true;
                 break;
             }
         }
-        if(!found)
+        if (!found)
         {
             return false;
         }
         // early exit if path costs too long for correct movement
         var movementCosts = 0;
         var index = 0;
-        for(int i = 1; i < path.Count; i++)
+        for (int i = 1; i < path.Count; i++)
         {
             index = i;
             movementCosts += path[i].Cost;
-            if(target == path[i].Coordinates)
+            if (target == path[i].Coordinates)
             {
                 break;
             }
         }
         // special case to allow last item if movement points are left, but not enough
         // to fully fit last tile or if last tile was a river tile
-        if(movementCosts > unit.Movement + 1 && path[index].Cost != int.MaxValue)
+        if (movementCosts > unit.Movement + 1 && path[index].Cost != int.MaxValue)
         {
             return false;
         }
@@ -188,8 +192,8 @@ public class UnitManager
         // set unit to new position
         _map.Map[unit.Layer][destinationCoords.y * _map.Columns + destinationCoords.x] = unit.Id;
         unit.Position = target;
-        unit.Movement-= movementCosts;
-        if(unit.Movement < 0)
+        unit.Movement -= movementCosts;
+        if (unit.Movement < 0)
         {
             unit.Movement = 0;
         }
@@ -220,13 +224,13 @@ public class UnitManager
     {
         List<UnitBase> foundUnits = new();
         var coords = coordinates.ToOffset();
-        foreach(var layer in _map.Map)
+        foreach (var layer in _map.Map)
         {
             int tile = layer[coords.y * _map.Columns + coords.x];
             if (tile != (int)TileType.EMPTY && tile != (int)TileType.UNPASSABLE)
             {
                 UnitBase? unit = null;
-                if(_unitStore.TryGetValue(tile, out unit))
+                if (_unitStore.TryGetValue(tile, out unit))
                 {
                     foundUnits.Add(unit);
                 }
@@ -243,9 +247,9 @@ public class UnitManager
     public List<UnitBase> GetUnitsOfPlayer(int playerId)
     {
         List<UnitBase> foundUnits = new();
-        foreach(var unit in _unitStore)
+        foreach (var unit in _unitStore)
         {
-            if(unit.Value.Player == playerId)
+            if (unit.Value.Player == playerId)
             {
                 foundUnits.Add(unit.Value);
             }
@@ -265,7 +269,7 @@ public class UnitManager
         var offsetCoordinates = coordinates.ToOffset();
         int unitId = _map.Map[unit.Layer][offsetCoordinates.y * _map.Columns + offsetCoordinates.x];
         // early exit if map position is empty
-        if(unitId == (int)TileType.EMPTY)
+        if (unitId == (int)TileType.EMPTY)
         {
             return false;
         }
@@ -302,7 +306,7 @@ public class UnitManager
     public bool CanAttack(CubeCoordinates coordinates, UnitBase unit)
     {
         // early exit if unit is not able to attack
-        if(unit.CanAttack == false)
+        if (unit.CanAttack == false)
         {
             return false;
         }
@@ -370,33 +374,80 @@ public class UnitManager
     /// <returns>Computed damage values for given combat inputs.</returns>
     public (int damageAttacker, int damageDefender) ComputeCombatOutcome(ICombatEntity attacker, ICombatEntity defender, CombatModificators mods)
     {
-        // an attacker has a seed value, so multiple tries will have the same random value
-        Random randomAttacker = new Random(attacker.Seed);
-        Random randomDefender = new Random(defender.Seed);
+        Random randomAttacker = new(attacker.Seed);
+        Random randomDefender = new(defender.Seed);
 
-        // calculate combat strength with external bonus
         int attackerCombatStrength = attacker.CombatStrength + mods.AttackerTerrainBonus + mods.AttackerWeaponBonus + mods.AttackerFortificationBonus;
         int defenderCombatStrength = defender.CombatStrength + mods.DefenderTerrainBonus + mods.DefenderWeaponBonus + mods.DefenderFortificationBonus;
 
-        // if this is a ranged attack, also add RangedAttack
-        if (mods.RangedAttack == true)
-        {
-            attackerCombatStrength+= attacker.RangedAttack;
-        }
+        if (mods.RangedAttack) attackerCombatStrength += attacker.RangedAttack;
 
-        // calculate combat damage based on Civ6 calculation
-        int combatDiff = attackerCombatStrength - defenderCombatStrength;
-        double randomFactor = randomAttacker.NextDouble() * 0.4 + 0.8; // generates a value between 0.8 and 1.2
-        int damageDefender = (int)(30.0 * Math.Exp(0.04 * combatDiff) * randomFactor);
+        int diff = attackerCombatStrength - defenderCombatStrength;
+        double rf = randomAttacker.NextDouble() * 0.4 + 0.8;
+        int damageDefender = (int)(30.0 * Math.Exp(0.04 * diff) * rf);
         int damageAttacker = 0;
-        attacker.Seed = randomAttacker.Next(0, int.MaxValue); // updates seed
-        if(mods.RangedAttack == false && mods.NoCounterAttack == false)
+        attacker.Seed = randomAttacker.Next(0, int.MaxValue);
+
+        if (!mods.RangedAttack && !mods.NoCounterAttack)
         {
-            randomFactor = randomDefender.NextDouble() * 0.4 + 0.8;
-            damageAttacker = (int)(30.0 * Math.Exp(0.04 * -combatDiff) * randomFactor);
-            defender.Seed = randomDefender.Next(0, int.MaxValue); // updates seed
+            rf = randomDefender.NextDouble() * 0.4 + 0.8;
+            damageAttacker = (int)(30.0 * Math.Exp(0.04 * -diff) * rf);
+            defender.Seed = randomDefender.Next(0, int.MaxValue);
+        }
+        return (damageAttacker, damageDefender);
+    }
+
+    private sealed class UnitManagerState
+    {
+        public int LastUnitStoreId { get; set; }
+        public MapData MapData { get; set; } = new();
+        public Dictionary<int, UnitBase> UnitStore { get; set; } = new();
+        public UnitFactory? Factory { get; set; }
+    }
+
+    public string ToJson()
+    {
+        var state = new UnitManagerState
+        {
+            LastUnitStoreId = _lastUnitStoreId,
+            MapData = _map.Clone(),
+            UnitStore = _unitStore.ToDictionary(kv => kv.Key, kv => kv.Value),
+            Factory = _factory
+        };
+        return JsonSerializer.Serialize(state);
+    }
+
+    public static UnitManager FromJson(string json)
+    {
+        var state = JsonSerializer.Deserialize<UnitManagerState>(json)
+                     ?? throw new InvalidOperationException("Invalid UnitManager JSON.");
+
+        var um = new UnitManager
+        {
+            _lastUnitStoreId = state.LastUnitStoreId,
+            _map = state.MapData.Clone(),
+            _unitStore = state.UnitStore ?? new Dictionary<int, UnitBase>(),
+            _factory = state.Factory ?? new UnitFactory(new List<UnitBase>())
+        };
+
+        // Ensure map occupancy matches unit positions (repair if inconsistent)
+        foreach (var kv in um._unitStore)
+        {
+            var unit = kv.Value;
+            var off = unit.Position.ToOffset();
+            if (unit.Layer >= 0 &&
+                unit.Layer < um._map.Map.Count &&
+                off.y >= 0 && off.y < um._map.Rows &&
+                off.x >= 0 && off.x < um._map.Columns)
+            {
+                var idx = off.y * um._map.Columns + off.x;
+                if (um._map.Map[unit.Layer][idx] != kv.Key)
+                {
+                    um._map.Map[unit.Layer][idx] = kv.Key;
+                }
+            }
         }
 
-        return (damageAttacker, damageDefender);
+        return um;
     }
 }
