@@ -31,8 +31,8 @@ public sealed class UnitManagerSerializationTests
         Assert.IsFalse(string.IsNullOrWhiteSpace(json), "JSON should not be empty.");
 
         // dump this map as JSON to disk
-        var filePath = @"C:\Temp\UnitManager.json";
-        File.WriteAllText(filePath, json);
+        //var filePath = @"C:\Temp\UnitManager.json";
+        //File.WriteAllText(filePath, json);
 
         var roundTripped = UnitManager.FromJson(json);
         Assert.IsNotNull(roundTripped, "Deserialized UnitManager should not be null.");
