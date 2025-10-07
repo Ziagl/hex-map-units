@@ -450,4 +450,258 @@ public class UnitManager
 
         return um;
     }
+
+    /// <summary>
+    /// Writes the complete UnitManager state to a binary writer.
+    /// </summary>
+    public void Write(BinaryWriter writer)
+    {
+        // Version
+        writer.Write(1);
+
+        // Core fields
+        writer.Write(_lastUnitStoreId);
+
+        // Map
+        writer.Write(_map.Rows);
+        writer.Write(_map.Columns);
+        writer.Write(_map.Map.Count);
+        foreach (var layer in _map.Map)
+        {
+            writer.Write(layer.Count);
+            foreach (var v in layer)
+                writer.Write(v);
+        }
+
+        // Factory (definitions)
+        if (_factory is null)
+        {
+            writer.Write(false);
+        }
+        else
+        {
+            writer.Write(true);
+            var defs = _factory.UnitDefinitions ?? new List<UnitBase>();
+            writer.Write(defs.Count);
+            foreach (var d in defs)
+            {
+                WriteUnit(writer, d, includeId: false);
+            }
+        }
+
+        // Units
+        writer.Write(_unitStore.Count);
+        foreach (var kv in _unitStore)
+        {
+            writer.Write(kv.Key); // key (Id)
+            WriteUnit(writer, kv.Value, includeId: true);
+        }
+    }
+
+    /// <summary>
+    /// Reads a UnitManager state from a binary reader.
+    /// </summary>
+    public static UnitManager Read(BinaryReader reader)
+    {
+        var version = reader.ReadInt32();
+        if (version != 1)
+        {
+            throw new InvalidOperationException($"Unsupported UnitManager binary version {version}.");
+        }
+
+        var um = new UnitManager();
+
+        um._lastUnitStoreId = reader.ReadInt32();
+
+        // Map
+        um._map.Rows = reader.ReadInt32();
+        um._map.Columns = reader.ReadInt32();
+        int layerCount = reader.ReadInt32();
+        um._map.Map = new List<List<int>>(layerCount);
+        for (int l = 0; l < layerCount; l++)
+        {
+            int count = reader.ReadInt32();
+            var layer = new List<int>(count);
+            for (int i = 0; i < count; i++)
+                layer.Add(reader.ReadInt32());
+            um._map.Map.Add(layer);
+        }
+
+        // Factory
+        bool hasFactory = reader.ReadBoolean();
+        List<UnitBase> factoryDefs = new();
+        if (hasFactory)
+        {
+            int defCount = reader.ReadInt32();
+            for (int i = 0; i < defCount; i++)
+            {
+                factoryDefs.Add(ReadUnit(reader, assumeHasId: false));
+            }
+        }
+        um._factory = new UnitFactory(factoryDefs);
+
+        // Units
+        int unitCount = reader.ReadInt32();
+        um._unitStore = new Dictionary<int, UnitBase>(unitCount);
+        for (int i = 0; i < unitCount; i++)
+        {
+            int key = reader.ReadInt32();
+            var unit = ReadUnit(reader, assumeHasId: true);
+            unit.Id = key; // enforce key consistency
+            um._unitStore[key] = unit;
+        }
+
+        // Repair / ensure occupancy
+        foreach (var kv in um._unitStore)
+        {
+            var unit = kv.Value;
+            var off = unit.Position.ToOffset();
+            if (unit.Layer >= 0 &&
+                unit.Layer < um._map.Map.Count &&
+                off.y >= 0 && off.y < um._map.Rows &&
+                off.x >= 0 && off.x < um._map.Columns)
+            {
+                var idx = off.y * um._map.Columns + off.x;
+                um._map.Map[unit.Layer][idx] = kv.Key;
+            }
+        }
+
+        return um;
+    }
+
+    private static void WriteUnit(BinaryWriter w, UnitBase u, bool includeId)
+    {
+        if (includeId) w.Write(u.Id);
+
+        w.Write(u.Player);
+        w.Write(u.Health);
+        w.Write(u.MaxHealth);
+        WriteNullableString(w, u.Name);
+        WriteStringList(w, u.Images);
+        WriteNullableString(w, u.Description);
+        w.Write(u.Type);
+        w.Write(u.Era);
+        w.Write(u.MaxMovement);
+        w.Write(u.MovementType);
+        w.Write(u.Movement);
+        w.Write(u.WeaponType);
+        w.Write(u.CombatStrength);
+        w.Write(u.RangedAttack);
+        w.Write(u.Range);
+        w.Write(u.Fortification);
+        w.Write(u.Seed);
+        w.Write(u.Sight);
+        w.Write(u.CanAttack);
+        w.Write(u.CanBuildCity);
+        WriteIntDictionary(w, u.Goods);
+        w.Write(u.ProductionCost);
+        w.Write(u.PurchaseCost);
+        w.Write(u.UpkeepCost);
+
+        // Position serialized as JSON for safety/forward compatibility
+        var posJson = JsonSerializer.Serialize(u.Position);
+        w.Write(posJson);
+        w.Write(u.Layer);
+    }
+
+    private static UnitBase ReadUnit(BinaryReader r, bool assumeHasId)
+    {
+        var u = new UnitBase();
+        if (assumeHasId)
+        {
+            u.Id = r.ReadInt32();
+        }
+        u.Player = r.ReadInt32();
+        u.Health = r.ReadInt32();
+        u.MaxHealth = r.ReadInt32();
+        u.Name = ReadNullableString(r);
+        u.Images = ReadStringList(r);
+        u.Description = ReadNullableString(r);
+        u.Type = r.ReadInt32();
+        u.Era = r.ReadInt32();
+        u.MaxMovement = r.ReadInt32();
+        u.MovementType = r.ReadInt32();
+        u.Movement = r.ReadInt32();
+        u.WeaponType = r.ReadInt32();
+        u.CombatStrength = r.ReadInt32();
+        u.RangedAttack = r.ReadInt32();
+        u.Range = r.ReadInt32();
+        u.Fortification = r.ReadInt32();
+        u.Seed = r.ReadInt32();
+        u.Sight = r.ReadInt32();
+        u.CanAttack = r.ReadBoolean();
+        u.CanBuildCity = r.ReadBoolean();
+        u.Goods = ReadIntDictionary(r);
+        u.ProductionCost = r.ReadInt32();
+        u.PurchaseCost = r.ReadInt32();
+        u.UpkeepCost = r.ReadInt32();
+
+        var posJson = r.ReadString();
+        u.Position = JsonSerializer.Deserialize<CubeCoordinates>(posJson)!;
+        u.Layer = r.ReadInt32();
+        return u;
+    }
+
+    private static void WriteNullableString(BinaryWriter w, string? s)
+    {
+        bool has = s is not null;
+        w.Write(has);
+        if (has) w.Write(s!);
+    }
+
+    private static string? ReadNullableString(BinaryReader r)
+    {
+        return r.ReadBoolean() ? r.ReadString() : null;
+    }
+
+    private static void WriteStringList(BinaryWriter w, List<string>? list)
+    {
+        if (list is null)
+        {
+            w.Write(-1);
+            return;
+        }
+        w.Write(list.Count);
+        foreach (var s in list)
+            w.Write(s ?? string.Empty);
+    }
+
+    private static List<string> ReadStringList(BinaryReader r)
+    {
+        int count = r.ReadInt32();
+        if (count < 0) return new List<string>();
+        var list = new List<string>(count);
+        for (int i = 0; i < count; i++)
+            list.Add(r.ReadString());
+        return list;
+    }
+
+    private static void WriteIntDictionary(BinaryWriter w, Dictionary<int, int>? dict)
+    {
+        if (dict is null)
+        {
+            w.Write(-1);
+            return;
+        }
+        w.Write(dict.Count);
+        foreach (var kv in dict)
+        {
+            w.Write(kv.Key);
+            w.Write(kv.Value);
+        }
+    }
+
+    private static Dictionary<int, int> ReadIntDictionary(BinaryReader r)
+    {
+        int count = r.ReadInt32();
+        if (count < 0) return new Dictionary<int, int>();
+        var d = new Dictionary<int, int>(count);
+        for (int i = 0; i < count; i++)
+        {
+            var k = r.ReadInt32();
+            var v = r.ReadInt32();
+            d[k] = v;
+        }
+        return d;
+    }
 }

@@ -20,8 +20,8 @@ public sealed class UnitManagerSerializationTests
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
-        var unit1 = Utils.GetExampleUnit();
-        var unit2 = Utils.GetExampleUnit();
+        var unit1 = TestUtils.GetExampleUnit();
+        var unit2 = TestUtils.GetExampleUnit();
         unit2.Player = 2;
         unit2.Position = new CubeCoordinates(1, 0, -1);
         unitManager.CreateUnit(unit1);
@@ -37,6 +37,39 @@ public sealed class UnitManagerSerializationTests
         var roundTripped = UnitManager.FromJson(json);
         Assert.IsNotNull(roundTripped, "Deserialized UnitManager should not be null.");
 
+        AssertUnitManagerEqual(unitManager, roundTripped);
+    }
+
+    [TestMethod]
+    public void BinarySerializationDeserialization()
+    {
+        var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
+        var unit1 = TestUtils.GetExampleUnit();
+        var unit2 = TestUtils.GetExampleUnit();
+        unit2.Player = 2;
+        unit2.Position = new CubeCoordinates(1, 0, -1);
+        unitManager.CreateUnit(unit1);
+        unitManager.CreateUnit(unit2);
+
+        using var ms = new MemoryStream();
+        using (var writer = new BinaryWriter(ms, System.Text.Encoding.UTF8, leaveOpen: true))
+        {
+            unitManager.Write(writer);
+        }
+
+        // dump this map as BIN to disk
+        //var filePath = @"C:\Temp\UnitManager.bin";
+        //File.WriteAllBytes(filePath, ms.ToArray());
+
+        ms.Position = 0;
+        UnitManager roundTripped;
+        using (var reader = new BinaryReader(ms, System.Text.Encoding.UTF8, leaveOpen: true))
+        {
+            roundTripped = UnitManager.Read(reader);
+        }
+
+        Assert.IsNotNull(roundTripped, "Binary deserialized UnitManager should not be null.");
         AssertUnitManagerEqual(unitManager, roundTripped);
     }
 

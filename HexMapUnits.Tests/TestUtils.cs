@@ -1,14 +1,9 @@
 ﻿using com.hexagonsimulations.HexMapBase.Models;
 using com.hexagonsimulations.HexMapUnits.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HexMapUnits.Tests;
 
-internal class Utils
+internal class TestUtils
 {
     private static readonly UnitBase _exampleUnit = new()
     {

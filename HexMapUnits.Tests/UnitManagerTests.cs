@@ -20,7 +20,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         Assert.AreNotEqual(0, unit.Id);
@@ -31,7 +31,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         unit.Layer = 1;
         bool success = unitManager.CreateUnit(unit);
         Assert.IsFalse(success);
@@ -43,7 +43,7 @@ public sealed class UnitManagerTests
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         exampleMap[0] = 1;
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>() { new List<int>() { 1 } }, _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsFalse(success);
     }
@@ -53,10 +53,10 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
-        var unit2 = Utils.GetExampleUnit();
+        var unit2 = TestUtils.GetExampleUnit();
         success = unitManager.CreateUnit(unit2);
         Assert.IsFalse(success);
     }
@@ -66,16 +66,16 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         unit.Player = 1;
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
-        var unit2 = Utils.GetExampleUnit();
+        var unit2 = TestUtils.GetExampleUnit();
         unit2.Player = 2;
         unit2.Position = new CubeCoordinates(1, 0, -1);
         success = unitManager.CreateUnit(unit2);
         Assert.IsTrue(success);
-        var unit3 = Utils.GetExampleUnit();
+        var unit3 = TestUtils.GetExampleUnit();
         unit3.Player = 1;
         unit3.Position = new CubeCoordinates(2, 0, -2);
         success = unitManager.CreateUnit(unit3);
@@ -92,7 +92,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         success = unitManager.RemoveUnit(unit.Id);
@@ -106,7 +106,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         var unit2 = unitManager.GetUnitById(unit.Id);
@@ -119,7 +119,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         var units = unitManager.GetUnitsByCoordinates(new CubeCoordinates(0, 0, 0));
@@ -132,7 +132,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         success = unitManager.MoveUnit(unit.Id, new CubeCoordinates(1, 0, -1));
@@ -149,7 +149,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
         success = unitManager.MoveUnitByPath(unit.Id, new List<WeightedCubeCoordinates>() {
@@ -203,25 +203,25 @@ public sealed class UnitManagerTests
             Enumerable.Repeat(0, 16).ToList()   // layer 1
         };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit1 = Utils.GetExampleUnit();
+        var unit1 = TestUtils.GetExampleUnit();
         unit1.Player = 1;
         unit1.Layer = 0;
         unit1.Position = new CubeCoordinates(0, 0, 0);
         bool success = unitManager.CreateUnit(unit1);
         Assert.IsTrue(success);
-        var unit2 = Utils.GetExampleUnit();
+        var unit2 = TestUtils.GetExampleUnit();
         unit2.Player = 2;
         unit2.Layer = 0;
         unit2.Position = new CubeCoordinates(1, 0, -1);
         success = unitManager.CreateUnit(unit2);
         Assert.IsTrue(success);
-        var unit3 = Utils.GetExampleUnit();
+        var unit3 = TestUtils.GetExampleUnit();
         unit3.Player = 1;
         unit3.Layer = 1;
         unit3.Position = new CubeCoordinates(2, 0, -2);
         success = unitManager.CreateUnit(unit3);
         Assert.IsTrue(success);
-        var selectedUnit = Utils.GetExampleUnit();
+        var selectedUnit = TestUtils.GetExampleUnit();
         selectedUnit.Player = 1;
         selectedUnit.Layer = 0;
         selectedUnit.CanAttack = false;
@@ -245,25 +245,25 @@ public sealed class UnitManagerTests
             Enumerable.Repeat(0, 16).ToList()   // layer 1
         };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>(), _unitDefinitions);
-        var unit1 = Utils.GetExampleUnit();
+        var unit1 = TestUtils.GetExampleUnit();
         unit1.Player = 1;
         unit1.Layer = 0;
         unit1.Position = new CubeCoordinates(0, 0, 0);
         bool success = unitManager.CreateUnit(unit1);
         Assert.IsTrue(success);
-        var unit2 = Utils.GetExampleUnit();
+        var unit2 = TestUtils.GetExampleUnit();
         unit2.Player = 2;
         unit2.Layer = 0;
         unit2.Position = new CubeCoordinates(1, 0, -1);
         success = unitManager.CreateUnit(unit2);
         Assert.IsTrue(success);
-        var unit3 = Utils.GetExampleUnit();
+        var unit3 = TestUtils.GetExampleUnit();
         unit3.Player = 2;
         unit3.Layer = 1;
         unit3.Position = new CubeCoordinates(2, 0, -2);
         success = unitManager.CreateUnit(unit3);
         Assert.IsTrue(success);
-        var selectedUnit = Utils.GetExampleUnit();
+        var selectedUnit = TestUtils.GetExampleUnit();
         selectedUnit.Player = 1;
         selectedUnit.Layer = 0;
         selectedUnit.CanAttack = false;
@@ -286,7 +286,7 @@ public sealed class UnitManagerTests
         };
         var tile = new CubeCoordinates(1, 0, -1);
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { new List<int>() { 5 }, new List<int>() { 5 } } , _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         unit.Player = 1;
         unit.Layer = 0;
         unit.Position = new CubeCoordinates(0, 0, 0);
@@ -301,7 +301,7 @@ public sealed class UnitManagerTests
         Assert.IsFalse(isPassable);
         unit.Layer = 0;
         // Test tile occupied by another unit
-        var unit2 = Utils.GetExampleUnit();
+        var unit2 = TestUtils.GetExampleUnit();
         unit2.Player = 2;
         unit2.Layer = 0;
         unit2.Position = new CubeCoordinates(1, 0, -1);
@@ -316,11 +316,11 @@ public sealed class UnitManagerTests
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
-        var unit = Utils.GetExampleUnit();
+        var unit = TestUtils.GetExampleUnit();
         unit.Id = 1;
         unit.Position = new CubeCoordinates(0, 0, 0);
         unitManager.CreateUnit(unit);
-        unit = Utils.GetExampleUnit();
+        unit = TestUtils.GetExampleUnit();
         unit.Id = 2;
         unit.Position = new CubeCoordinates(1, 0, -1);
         unitManager.CreateUnit(unit);
@@ -342,8 +342,8 @@ public sealed class UnitManagerTests
         var random = new Random();
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
-        var attacker = Utils.GetExampleUnit();
-        var defender = Utils.GetExampleUnit();
+        var attacker = TestUtils.GetExampleUnit();
+        var defender = TestUtils.GetExampleUnit();
         attacker.Seed = random.Next();
         defender.Seed = random.Next();
         var mods = new CombatModificators();
