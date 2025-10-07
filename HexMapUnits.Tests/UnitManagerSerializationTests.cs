@@ -16,7 +16,7 @@ public sealed class UnitManagerSerializationTests
     }
 
     [TestMethod]
-    public void SerializationDeserialization()
+    public void SerializationDeserializationJson()
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
@@ -41,7 +41,7 @@ public sealed class UnitManagerSerializationTests
     }
 
     [TestMethod]
-    public void BinarySerializationDeserialization()
+    public void SerializationDeserializationBinary()
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
