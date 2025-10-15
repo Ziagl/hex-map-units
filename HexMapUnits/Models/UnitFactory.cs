@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace com.hexagonsimulations.HexMapUnits.Models;
 
@@ -39,25 +38,5 @@ internal class UnitFactory
             unit.UpkeepCost = definition.UpkeepCost;
             unit.Seed = new Random().Next();
         }
-    }
-
-    private sealed class UnitFactoryState
-    {
-        public List<UnitBase> UnitDefinitions { get; set; } = new();
-    }
-
-    public string ToJson()
-    {
-        return JsonSerializer.Serialize(new UnitFactoryState
-        {
-            UnitDefinitions = _unitDefinitions
-        });
-    }
-
-    public static UnitFactory FromJson(string json)
-    {
-        var state = JsonSerializer.Deserialize<UnitFactoryState>(json)
-                     ?? throw new InvalidOperationException("Invalid UnitFactory JSON.");
-        return new UnitFactory(state.UnitDefinitions ?? new List<UnitBase>());
     }
 }

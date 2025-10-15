@@ -30,26 +30,39 @@ internal class TestUtils
         Seed = 0
     };
 
+    // Clone all properties (deep copy mutable collections)
     private static UnitBase CloneUnit(UnitBase unit)
     {
+        if (unit == null) return null!;
         return new UnitBase
         {
             Id = unit.Id,
-            Position = unit.Position,
-            Layer = unit.Layer,
             Player = unit.Player,
-            Type = unit.Type,
             Health = unit.Health,
             MaxHealth = unit.MaxHealth,
-            Movement = unit.Movement,
+            Name = unit.Name,
+            Images = new List<string>(unit.Images),
+            Description = unit.Description,
+            Type = unit.Type,
+            Era = unit.Era,
             MaxMovement = unit.MaxMovement,
+            MovementType = unit.MovementType,
+            Movement = unit.Movement,
+            WeaponType = unit.WeaponType,
             CombatStrength = unit.CombatStrength,
+            RangedAttack = unit.RangedAttack,
             Range = unit.Range,
+            Fortification = unit.Fortification,
+            Seed = unit.Seed,
+            Sight = unit.Sight,
             CanAttack = unit.CanAttack,
+            CanBuildCity = unit.CanBuildCity,
+            Goods = new Dictionary<int, int>(unit.Goods),
             ProductionCost = unit.ProductionCost,
             PurchaseCost = unit.PurchaseCost,
             UpkeepCost = unit.UpkeepCost,
-            Seed = unit.Seed,
+            Position = unit.Position,
+            Layer = unit.Layer
         };
     }
 

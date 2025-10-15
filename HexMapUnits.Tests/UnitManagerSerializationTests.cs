@@ -8,6 +8,9 @@ namespace com.hexagonsimulations.HexMapUnits.Tests;
 [TestClass]
 public sealed class UnitManagerSerializationTests
 {
+    private readonly string TempDir = @"C:\Temp\";
+    private readonly bool DumpToDisk = false; // set to true to dump serialized data to disk for inspection
+
     private readonly List<UnitBase> _unitDefinitions = new();
 
     public UnitManagerSerializationTests()
@@ -16,7 +19,7 @@ public sealed class UnitManagerSerializationTests
     }
 
     [TestMethod]
-    public void SerializationDeserializationJson()
+    public void UnitManager_Json()
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
@@ -30,9 +33,10 @@ public sealed class UnitManagerSerializationTests
         var json = unitManager.ToJson();
         Assert.IsFalse(string.IsNullOrWhiteSpace(json), "JSON should not be empty.");
 
-        // dump this map as JSON to disk
-        //var filePath = @"C:\Temp\UnitManager.json";
-        //File.WriteAllText(filePath, json);
+        if (DumpToDisk)
+        {
+            File.WriteAllText($"{TempDir}UnitManager.json", json);
+        }
 
         var roundTripped = UnitManager.FromJson(json);
         Assert.IsNotNull(roundTripped, "Deserialized UnitManager should not be null.");
@@ -41,7 +45,7 @@ public sealed class UnitManagerSerializationTests
     }
 
     [TestMethod]
-    public void SerializationDeserializationBinary()
+    public void UnitManager_Binary()
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
         var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
@@ -58,9 +62,10 @@ public sealed class UnitManagerSerializationTests
             unitManager.Write(writer);
         }
 
-        // dump this map as BIN to disk
-        //var filePath = @"C:\Temp\UnitManager.bin";
-        //File.WriteAllBytes(filePath, ms.ToArray());
+        if (DumpToDisk)
+        {
+            File.WriteAllBytes($"{TempDir}UnitManager.bin", ms.ToArray());
+        }
 
         ms.Position = 0;
         UnitManager roundTripped;
