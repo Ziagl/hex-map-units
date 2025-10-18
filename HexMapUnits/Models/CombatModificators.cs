@@ -1,4 +1,4 @@
-﻿namespace HexMapUnits.Models;
+﻿namespace com.hexagonsimulations.HexMapBase.Models;
 
 public class CombatModificators
 {

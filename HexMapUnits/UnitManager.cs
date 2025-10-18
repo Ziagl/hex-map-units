@@ -2,9 +2,7 @@
 using com.hexagonsimulations.HexMapBase.Models;
 using com.hexagonsimulations.HexMapUnits.Enums;
 using com.hexagonsimulations.HexMapUnits.Models;
-using HexMapUnits.Models;
 using System.Text.Json;
-using System.Linq;
 
 namespace com.hexagonsimulations.HexMapUnits;
 
