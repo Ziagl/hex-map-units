@@ -4,7 +4,7 @@ namespace com.hexagonsimulations.HexMapUnits.Models;
 
 public static class UnitFactory
 {
-    public static UnitBase CreateUnit(UnitType definition, int player, CubeCoordinates position, int layer)
+    public static UnitBase CreateUnitBase(UnitType definition, int player, CubeCoordinates position, int layer)
         => new UnitBase
         {
             // ID is set by CreateUnit in UnitManager

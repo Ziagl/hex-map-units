@@ -28,6 +28,6 @@ internal class TestUtils
 
     internal static UnitBase GetExampleUnit()
     {
-        return UnitFactory.CreateUnit(_exampleUnit, 0, new CubeCoordinates(0,0,0), 0);
+        return UnitFactory.CreateUnitBase(_exampleUnit, 0, new CubeCoordinates(0,0,0), 0);
     }
 }
