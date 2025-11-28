@@ -7,18 +7,11 @@ namespace com.hexagonsimulations.HexMapUnits.Tests;
 [TestClass]
 public sealed class UnitManagerTests
 {
-    private readonly List<UnitBase> _unitDefinitions = new();
-
-    public UnitManagerTests()
-    {
-        _unitDefinitions.Add(new UnitBase() { });
-    }
-
     [TestMethod]
     public void CreateUnit()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>());
         var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
@@ -29,7 +22,7 @@ public sealed class UnitManagerTests
     public void CreateUnitInvalidLayer()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>());
         var unit = TestUtils.GetExampleUnit();
         unit.Layer = 1;
         bool success = unitManager.CreateUnit(unit);
@@ -41,7 +34,7 @@ public sealed class UnitManagerTests
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
         exampleMap[0] = 1;
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>() { new List<int>() { 1 } }, _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>() { new List<int>() { 1 } });
         var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsFalse(success);
@@ -51,7 +44,7 @@ public sealed class UnitManagerTests
     public void CreateUnitAddTwoUnitsOnSameCoordinate()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>());
         var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
@@ -64,7 +57,7 @@ public sealed class UnitManagerTests
     public void GetUnitsOfPlayer()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>());
         var unit = TestUtils.GetExampleUnit();
         unit.Player = 1;
         bool success = unitManager.CreateUnit(unit);
@@ -90,7 +83,7 @@ public sealed class UnitManagerTests
     public void RemoveUnit()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>());
         var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
@@ -104,7 +97,7 @@ public sealed class UnitManagerTests
     public void GetUnitById()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>());
         var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
@@ -117,7 +110,7 @@ public sealed class UnitManagerTests
     public void GetUnitsByCoordinates()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>());
         var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
@@ -130,7 +123,7 @@ public sealed class UnitManagerTests
     public void MoveUnit()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>());
         var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
@@ -147,7 +140,7 @@ public sealed class UnitManagerTests
     public void MoveUnitByPath()
     {
         List<int> exampleMap = Enumerable.Repeat(0, 16).ToList();
-        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(new List<List<int>>() { exampleMap }, 4, 4, new List<List<int>>());
         var unit = TestUtils.GetExampleUnit();
         bool success = unitManager.CreateUnit(unit);
         Assert.IsTrue(success);
@@ -201,7 +194,7 @@ public sealed class UnitManagerTests
             Enumerable.Repeat(0, 16).ToList(),  // layer 0
             Enumerable.Repeat(0, 16).ToList()   // layer 1
         };
-        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>());
         var unit1 = TestUtils.GetExampleUnit();
         unit1.Player = 1;
         unit1.Layer = 0;
@@ -243,7 +236,7 @@ public sealed class UnitManagerTests
             Enumerable.Repeat(0, 16).ToList(),  // layer 0
             Enumerable.Repeat(0, 16).ToList()   // layer 1
         };
-        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>(), _unitDefinitions);
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>());
         var unit1 = TestUtils.GetExampleUnit();
         unit1.Player = 1;
         unit1.Layer = 0;
@@ -284,7 +277,7 @@ public sealed class UnitManagerTests
             Enumerable.Repeat(5, 16).ToList()   // layer 1, impassable
         };
         var tile = new CubeCoordinates(1, 0, -1);
-        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { new List<int>() { 5 }, new List<int>() { 5 } } , _unitDefinitions);
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { new List<int>() { 5 }, new List<int>() { 5 } });
         var unit = TestUtils.GetExampleUnit();
         unit.Player = 1;
         unit.Layer = 0;
@@ -314,7 +307,7 @@ public sealed class UnitManagerTests
     public void GetTileStatus()
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
-        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { });
         var unit = TestUtils.GetExampleUnit();
         unit.Id = 1;
         unit.Position = new CubeCoordinates(0, 0, 0);
@@ -340,7 +333,7 @@ public sealed class UnitManagerTests
     {
         var random = new Random();
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
-        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { });
         var attacker = TestUtils.GetExampleUnit();
         var defender = TestUtils.GetExampleUnit();
         attacker.Seed = random.Next();

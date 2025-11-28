@@ -1,42 +1,37 @@
-﻿using System.Text.Json.Serialization;
+﻿using com.hexagonsimulations.HexMapBase.Models;
 
 namespace com.hexagonsimulations.HexMapUnits.Models;
 
-internal class UnitFactory
+public static class UnitFactory
 {
-    private List<UnitBase> _unitDefinitions = new();
-
-    // Needed for System.Text.Json
-    [JsonConstructor]
-    public UnitFactory() { }
-
-    internal UnitFactory(List<UnitBase> unitDefinitions)
-    {
-        _unitDefinitions = unitDefinitions ?? new();
-    }
-
-    // Exposed so serializer can populate
-    public List<UnitBase> UnitDefinitions
-    {
-        get => _unitDefinitions;
-        set => _unitDefinitions = value ?? new();
-    }
-
-    public void CreateUnit(UnitBase unit)
-    {
-        var definition = _unitDefinitions.Find(d => d.Type == unit.Type);
-        if (definition is not null)
+    public static UnitBase CreateUnit(UnitType definition, int player, CubeCoordinates position, int layer)
+        => new UnitBase
         {
-            unit.MaxMovement = definition.MaxMovement;
-            unit.WeaponType = definition.WeaponType;
-            unit.CombatStrength = definition.CombatStrength;
-            unit.Range = definition.Range;
-            unit.Sight = definition.Sight;
-            unit.CanAttack = definition.CanAttack;
-            unit.ProductionCost = definition.ProductionCost;
-            unit.PurchaseCost = definition.PurchaseCost;
-            unit.UpkeepCost = definition.UpkeepCost;
-            unit.Seed = new Random().Next();
-        }
-    }
+            // ID is set by CreateUnit in UnitManager
+            Player = player,
+            Position = position,
+            Layer = layer,
+            Health = definition.MaxHealth,
+            MaxHealth = definition.MaxHealth,
+            Name = definition.Name,
+            Images = new List<string>(definition.Images),
+            Description = definition.Description,
+            Type = definition.Type,
+            Era = definition.Era,
+            MaxMovement = definition.MaxMovement,
+            MovementType = definition.MovementType,
+            Movement = definition.MaxMovement,
+            WeaponType = definition.WeaponType,
+            CombatStrength = definition.CombatStrength,
+            Range = definition.Range,
+            Fortification = definition.Fortification,
+            Seed = new Random().Next(),
+            Sight = definition.Sight,
+            CanAttack = definition.CanAttack,
+            CanBuildCity = definition.CanBuildCity,
+            Goods = new Dictionary<int, int>(definition.Goods),
+            ProductionCost = definition.ProductionCost,
+            PurchaseCost = definition.PurchaseCost,
+            UpkeepCost = definition.UpkeepCost,
+        };
 }

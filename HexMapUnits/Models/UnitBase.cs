@@ -1,43 +1,27 @@
 ﻿using com.hexagonsimulations.HexMapBase.Interfaces;
 using com.hexagonsimulations.HexMapBase.Models;
+using System.Text.Json.Serialization;
 
 namespace com.hexagonsimulations.HexMapUnits.Models;
 
-public class UnitBase : ICombatEntity
+public record UnitBase : UnitType, ICombatEntity
 {
     // base entity
+    [JsonPropertyName("id")]
     public int Id { get; set; }
+    [JsonPropertyName("player")]
     public int Player { get; set; }
-    public int Health { get; set; }
-    public int MaxHealth { get; set; }
-    // base unit
-    public string Name { get; set; } = string.Empty; // the name of this unit type
-    public List<string> Images { get; set; } = new(); //representation of this unit in UI and/or map
-    public string Description { get; set; } = string.Empty; // short description for what this unit is used
-    public int Type { get; set; } // the type of this unit (value of an enum?)
-    public int Era { get; set; } // min era for this unit
-    public int MaxMovement { get; set; } // maximum movement points (affects movement range)
-    public int MovementType { get; set; } // type of unit (f.e. move, wheel, shallow water, deep water, air, ...)
-    public int Movement { get; set; } // current movement points
-    // combat
-    public int WeaponType { get; set; } // type of weapon/combat of this unit (infantry, cavalry, ...)
-    public int CombatStrength { get; set; } // attack and defense points (damage in fight)
-    public int RangedAttack { get; set; } // ranged attack points (damage of airstrike)
-    public int Range { get; set; } // attack range (how far can this unit attack)
-    public int Fortification { get; set; } // fortification level (if entity does not move +1 level)
-    // random number
-    public int Seed { get; set; } // random number seed for this unit for this turn
-    // scouting
-    public int Sight { get; set; } // how far can this unit see (in hexes)
-    // flags
-    public bool CanAttack { get; set; } // can this unit attack?
-    public bool CanBuildCity { get; set; } // can this unit build a new city?
-    // economy
-    public Dictionary<int, int> Goods { get; set; } = new(); // goods needed to produce this unit
-    public int ProductionCost { get; set; } // amount of production needed to build this unit
-    public int PurchaseCost { get; set; } // amount of gold needed to purchase this unit
-    public int UpkeepCost { get; set; } // amount of gold needed to upkeep this unit
-    // position
+    // map information
+    [JsonPropertyName("position")]
     public CubeCoordinates Position { get; set; } // its position on the map
+    [JsonPropertyName("layer")]
     public int Layer { get; set; } // index of layer this unit is on
+
+    // Internal constructor - only accessible within the same assembly
+    // This allows UnitFactory to create instances while preventing external code from doing so
+    // JSON deserializer can still access it since it's in the same assembly
+    [JsonConstructor]
+    internal UnitBase()
+    {
+    }
 }

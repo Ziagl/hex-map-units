@@ -22,7 +22,7 @@ public sealed class UnitManagerSerializationTests
     public void UnitManager_Json()
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
-        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { });
         var unit1 = TestUtils.GetExampleUnit();
         var unit2 = TestUtils.GetExampleUnit();
         unit2.Player = 2;
@@ -48,7 +48,7 @@ public sealed class UnitManagerSerializationTests
     public void UnitManager_Binary()
     {
         var map = new List<List<int>>() { Enumerable.Repeat(0, 16).ToList() };
-        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { }, _unitDefinitions);
+        var unitManager = new UnitManager(map, 4, 4, new List<List<int>>() { });
         var unit1 = TestUtils.GetExampleUnit();
         var unit2 = TestUtils.GetExampleUnit();
         unit2.Player = 2;
@@ -100,37 +100,6 @@ public sealed class UnitManagerSerializationTests
             var expectedUnit = kvp.Value;
             var actualUnit = actualStore[kvp.Key];
             AssertUnitEqual(expectedUnit, actualUnit, $"Unit with Id {kvp.Key} mismatch.");
-        }
-
-        // Compare _factory (presence + serialized state)
-        var factoryField = typeof(UnitManager).GetField("_factory", BindingFlags.Instance | BindingFlags.NonPublic);
-        Assert.IsNotNull(factoryField, "_factory field not found on UnitManager.");
-
-        var expectedFactory = factoryField!.GetValue(expected);
-        var actualFactory = factoryField!.GetValue(actual);
-
-        Assert.IsNotNull(expectedFactory, "Expected _factory is null.");
-        Assert.IsNotNull(actualFactory, "Actual _factory is null.");
-        Assert.AreEqual(expectedFactory!.GetType(), actualFactory!.GetType(), "_factory types differ.");
-
-        // Try to use ToJson if available for deep equality
-        var toJsonMethod = expectedFactory.GetType().GetMethod("ToJson", BindingFlags.Instance | BindingFlags.Public);
-        if (toJsonMethod != null)
-        {
-            var expectedFactoryJson = (string)toJsonMethod.Invoke(expectedFactory, null)!;
-            var actualFactoryJson = (string)toJsonMethod.Invoke(actualFactory, null)!;
-            Assert.AreEqual(expectedFactoryJson, actualFactoryJson, "_factory serialized JSON differs.");
-        }
-        else
-        {
-            // Fallback: compare private _unitDefinitions list lengths
-            var defsField = expectedFactory.GetType().GetField("_unitDefinitions", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (defsField != null)
-            {
-                var expectedDefs = (IEnumerable<UnitBase>)defsField.GetValue(expectedFactory)!;
-                var actualDefs = (IEnumerable<UnitBase>)defsField.GetValue(actualFactory)!;
-                Assert.AreEqual(expectedDefs.Count(), actualDefs.Count(), "_factory unit definition count differs.");
-            }
         }
     }
 

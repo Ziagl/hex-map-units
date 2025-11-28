@@ -11,11 +11,10 @@ public class UnitManager
     private Dictionary<int, UnitBase> _unitStore = new();
     private int _lastUnitStoreId = 0;
     private MapData _map = new();
-    private UnitFactory _factory;
 
     private UnitManager() { }
 
-    public UnitManager(List<List<int>> map, int rows, int columns, List<List<int>> notPassableTiles, List<UnitBase> unitDefinitions)
+    public UnitManager(List<List<int>> map, int rows, int columns, List<List<int>> notPassableTiles)
     {
         _map.Rows = rows;
         _map.Columns = columns;
@@ -40,9 +39,6 @@ public class UnitManager
             ++layerIndex;
             _map.Map.Add(layerMap);
         }
-
-        // create factory
-        _factory = new UnitFactory(unitDefinitions);
     }
 
     /// <summary>
@@ -64,7 +60,6 @@ public class UnitManager
         {
             return false;
         }
-        _factory.CreateUnit(unit);
         // add unit to store
         _lastUnitStoreId++;
         unit.Id = _lastUnitStoreId;
@@ -400,7 +395,6 @@ public class UnitManager
         public int LastUnitStoreId { get; set; }
         public MapData MapData { get; set; } = new();
         public Dictionary<int, UnitBase> UnitStore { get; set; } = new();
-        public UnitFactory? Factory { get; set; }
     }
 
     public string ToJson()
@@ -410,7 +404,6 @@ public class UnitManager
             LastUnitStoreId = _lastUnitStoreId,
             MapData = _map.Clone(),
             UnitStore = _unitStore.ToDictionary(kv => kv.Key, kv => kv.Value),
-            Factory = _factory
         };
         return JsonSerializer.Serialize(state);
     }
@@ -425,7 +418,6 @@ public class UnitManager
             _lastUnitStoreId = state.LastUnitStoreId,
             _map = state.MapData.Clone(),
             _unitStore = state.UnitStore ?? new Dictionary<int, UnitBase>(),
-            _factory = state.Factory ?? new UnitFactory(new List<UnitBase>())
         };
 
         // Ensure map occupancy matches unit positions (repair if inconsistent)
@@ -471,22 +463,6 @@ public class UnitManager
                 writer.Write(v);
         }
 
-        // Factory (definitions)
-        if (_factory is null)
-        {
-            writer.Write(false);
-        }
-        else
-        {
-            writer.Write(true);
-            var defs = _factory.UnitDefinitions ?? new List<UnitBase>();
-            writer.Write(defs.Count);
-            foreach (var d in defs)
-            {
-                WriteUnit(writer, d, includeId: false);
-            }
-        }
-
         // Units
         writer.Write(_unitStore.Count);
         foreach (var kv in _unitStore)
@@ -524,19 +500,6 @@ public class UnitManager
                 layer.Add(reader.ReadInt32());
             um._map.Map.Add(layer);
         }
-
-        // Factory
-        bool hasFactory = reader.ReadBoolean();
-        List<UnitBase> factoryDefs = new();
-        if (hasFactory)
-        {
-            int defCount = reader.ReadInt32();
-            for (int i = 0; i < defCount; i++)
-            {
-                factoryDefs.Add(ReadUnit(reader, assumeHasId: false));
-            }
-        }
-        um._factory = new UnitFactory(factoryDefs);
 
         // Units
         int unitCount = reader.ReadInt32();
