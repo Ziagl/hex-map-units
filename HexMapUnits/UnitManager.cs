@@ -242,7 +242,7 @@ public class UnitManager
     /// </summary>
     /// <param name="playerId">player id to search for</param>
     /// <returns>list of units for given player, if no unit was found, empty list</returns>
-    public List<UnitBase> GetUnitsOfPlayer(int playerId)
+    public List<UnitBase> GetUnitsByPlayer(int playerId)
     {
         List<UnitBase> foundUnits = new();
         foreach (var unit in _unitStore)

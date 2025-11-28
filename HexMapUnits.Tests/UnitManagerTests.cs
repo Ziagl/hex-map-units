@@ -1,6 +1,5 @@
 ﻿using com.hexagonsimulations.HexMapBase.Models;
 using com.hexagonsimulations.HexMapUnits.Models;
-using HexMapUnits.Models;
 using HexMapUnits.Tests;
 
 namespace com.hexagonsimulations.HexMapUnits.Tests;
@@ -80,10 +79,10 @@ public sealed class UnitManagerTests
         unit3.Position = new CubeCoordinates(2, 0, -2);
         success = unitManager.CreateUnit(unit3);
         Assert.IsTrue(success);
-        var units = unitManager.GetUnitsOfPlayer(2);
+        var units = unitManager.GetUnitsByPlayer(2);
         Assert.AreEqual(1, units.Count);
         Assert.AreEqual(2, units.First().Id);
-        units = unitManager.GetUnitsOfPlayer(1);
+        units = unitManager.GetUnitsByPlayer(1);
         Assert.AreEqual(2, units.Count);
     }
 
@@ -97,7 +96,7 @@ public sealed class UnitManagerTests
         Assert.IsTrue(success);
         success = unitManager.RemoveUnit(unit.Id);
         Assert.IsTrue(success);
-        var units = unitManager.GetUnitsOfPlayer(1);
+        var units = unitManager.GetUnitsByPlayer(1);
         Assert.AreEqual(0, units.Count);
     }
 
