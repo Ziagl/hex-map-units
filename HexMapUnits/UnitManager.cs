@@ -397,7 +397,7 @@ public class UnitManager
         public Dictionary<int, UnitBase> UnitStore { get; set; } = new();
     }
 
-    public string ToJson()
+    public string ToJson(JsonSerializerOptions? options = null)
     {
         var state = new UnitManagerState
         {
@@ -405,12 +405,12 @@ public class UnitManager
             MapData = _map.Clone(),
             UnitStore = _unitStore.ToDictionary(kv => kv.Key, kv => kv.Value),
         };
-        return JsonSerializer.Serialize(state);
+        return JsonSerializer.Serialize(state, options);
     }
 
-    public static UnitManager FromJson(string json)
+    public static UnitManager FromJson(string json, JsonSerializerOptions? options = null)
     {
-        var state = JsonSerializer.Deserialize<UnitManagerState>(json)
+        var state = JsonSerializer.Deserialize<UnitManagerState>(json, options)
                      ?? throw new InvalidOperationException("Invalid UnitManager JSON.");
 
         var um = new UnitManager
