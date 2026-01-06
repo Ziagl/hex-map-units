@@ -92,7 +92,7 @@ public sealed class UnitManagerSerializationTests
         var expectedStore = GetUnitStore(expected);
         var actualStore = GetUnitStore(actual);
 
-        Assert.AreEqual(expectedStore.Count, actualStore.Count, "Unit store counts differ.");
+        Assert.HasCount(expectedStore.Count, actualStore, "Unit store counts differ.");
 
         foreach (var kvp in expectedStore.OrderBy(k => k.Key))
         {
@@ -152,7 +152,7 @@ public sealed class UnitManagerSerializationTests
         Assert.IsNotNull(actual, $"{context} actual sequence null.");
         var eList = expected.ToList();
         var aList = actual.ToList();
-        Assert.AreEqual(eList.Count, aList.Count, $"{context} count mismatch.");
+        Assert.HasCount(eList.Count, aList, $"{context} count mismatch.");
         for (int i = 0; i < eList.Count; i++)
             Assert.AreEqual(eList[i], aList[i], $"{context} element {i} mismatch.");
     }
@@ -162,7 +162,7 @@ public sealed class UnitManagerSerializationTests
         if (expected == null && actual == null) return;
         Assert.IsNotNull(expected, $"{context} expected dictionary null.");
         Assert.IsNotNull(actual, $"{context} actual dictionary null.");
-        Assert.AreEqual(expected.Count, actual.Count, $"{context} count mismatch.");
+        Assert.HasCount(expected.Count, actual, $"{context} count mismatch.");
         foreach (var kvp in expected)
         {
             Assert.IsTrue(actual.ContainsKey(kvp.Key), $"{context} missing key {kvp.Key}.");
@@ -172,7 +172,6 @@ public sealed class UnitManagerSerializationTests
 
     private static void AssertCubeCoordinatesEqual(CubeCoordinates expected, CubeCoordinates actual, string context)
     {
-        if (expected == null && actual == null) return;
         Assert.IsNotNull(expected, $"{context} expected null.");
         Assert.IsNotNull(actual, $"{context} actual null.");
         if (Equals(expected, actual)) return;
