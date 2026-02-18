@@ -1,5 +1,4 @@
-﻿using com.hexagonsimulations.HexMapBase.Interfaces;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace com.hexagonsimulations.HexMapUnits.Models;
 
@@ -15,6 +14,8 @@ public record UnitType
     public string Name { get; set; } = string.Empty; // the name of this unit type
     [JsonPropertyName("images")]
     public List<string> Images { get; set; } = new(); //representation of this unit in UI and/or map
+    [JsonPropertyName("models")]
+    public List<string> Models { get; set; } = new(); // 3D models for this unit (if used in 3D)
     [JsonPropertyName("description")]
     public string Description { get; set; } = string.Empty; // short description for what this unit is used
     [JsonPropertyName("type")]
