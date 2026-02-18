@@ -15,6 +15,7 @@ public static class UnitFactory
             MaxHealth = definition.MaxHealth,
             Name = definition.Name,
             Images = new List<string>(definition.Images),
+            Models = new List<string>(definition.Models),
             Description = definition.Description,
             Type = definition.Type,
             Era = definition.Era,
